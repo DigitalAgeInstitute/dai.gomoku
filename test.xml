@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<request>
+	<type>LOGIN</type>
+	<username>someuser</username>
+	<password>somepass</password>
+</request>
