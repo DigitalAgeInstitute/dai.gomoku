@@ -7,5 +7,5 @@ package dai.gomoku.game.core;
  *
  */
 public interface Player {
-
+	boolean equals( Object o );
 }

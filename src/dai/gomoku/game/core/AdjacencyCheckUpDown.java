@@ -19,6 +19,7 @@ public class AdjacencyCheckUpDown implements ContiguousCheck {
 	public AdjacencyCheckUpDown(Board board) {
 		this.board = board;
 		upDownAdjacencies = new ArrayList<Set<Cell>>();
+		registerWithCells();
 	}
 
 	@Override
@@ -39,26 +40,34 @@ public class AdjacencyCheckUpDown implements ContiguousCheck {
 		return present;
 	}
 
+	private void registerWithCells() {
+		int boardSize = board.getSize();
+		for (int row = 0; row < boardSize; row++) {
+			for (int col = 0; col < boardSize; col++) {
+				board.getCellByPosition(row, col).registerCellChangeObserver(
+						this);
+			}
+		}
+	}
+
 	private void checkAdjacencies(Cell cell) {
-		BoardPosition cellPosition = cell.getBoardPosition();
 		Set<Cell> adjacentCells = new HashSet<>();
 		adjacentCells.add(cell);
-		checkUp(cellPosition, adjacentCells);
-		checkDown(cellPosition, adjacentCells);
+		checkUp(cell, adjacentCells);
+		checkDown(cell, adjacentCells);
 		if (adjacentCells.size() > 1) {
 			sanitiseAndAdd(adjacentCells);
 		}
 	}
 
-	private void checkUp(BoardPosition cellPosition, Set<Cell> adjacentCells) {
-		int row = cellPosition.getRow() - 1;
-		Player cellOwner = board.getCellByPosition(cellPosition).getCellOwner();
+	private void checkUp(Cell cell, Set<Cell> adjacentCells) {
+		int row = cell.getRow() - 1;
+		Player cellOwner = cell.getCellOwner();
 
 		while ((row >= 0) && (row < board.getSize())) {
-			if (board.getCellByPosition(row, cellPosition.getCol())
-					.getCellOwner().equals(cellOwner)) {
-				adjacentCells.add(board.getCellByPosition(row,
-						cellPosition.getCol()));
+			Cell cellToCheck = board.getCellByPosition(row, cell.getCol());
+			if (cellOwner.equals(cellToCheck.getCellOwner())) {
+				adjacentCells.add(cellToCheck);
 				row--;
 			} else {
 				break;
@@ -66,15 +75,14 @@ public class AdjacencyCheckUpDown implements ContiguousCheck {
 		}
 	}
 
-	private void checkDown(BoardPosition cellPosition, Set<Cell> adjacentCells) {
-		int row = cellPosition.getRow() + 1;
-		Player cellOwner = board.getCellByPosition(cellPosition).getCellOwner();
+	private void checkDown(Cell cell, Set<Cell> adjacentCells) {
+		int row = cell.getRow() + 1;
+		Player cellOwner = cell.getCellOwner();
 
 		while ((row >= 0) && (row < board.getSize())) {
-			if (board.getCellByPosition(row, cellPosition.getCol())
-					.getCellOwner().equals(cellOwner)) {
-				adjacentCells.add(board.getCellByPosition(row,
-						cellPosition.getCol()));
+			Cell cellToCheck = board.getCellByPosition(row, cell.getCol());
+			if (cellOwner.equals(cellToCheck.getCellOwner())) {
+				adjacentCells.add(cellToCheck);
 				row++;
 			} else {
 				break;

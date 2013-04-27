@@ -9,6 +9,7 @@ public class Cell {
 
 	public Cell(BoardPosition position) {
 		this.boardPosition = position;
+		this.cellChangeObservers = new ArrayList<CellChangeObserver>();
 	}
 
 	/**
@@ -23,11 +24,12 @@ public class Cell {
 	 *            the cellOwner to set
 	 */
 	public void setCellOwner(Player cellOwner) throws CellOwnershipException {
-		if ( cellOwner != null ) {
-			throw new CellOwnershipException( "You tried to change Cell ownership. This is an illegal operation." );
+		if (this.cellOwner != null) {
+			throw new CellOwnershipException(
+					"You tried to change Cell ownership. This is an illegal operation.");
 		} else {
-		this.cellOwner = cellOwner;
-		notifyCellChangeObservers();
+			this.cellOwner = cellOwner;
+			notifyCellChangeObservers();
 		}
 	}
 
@@ -37,12 +39,12 @@ public class Cell {
 	public BoardPosition getBoardPosition() {
 		return boardPosition;
 	}
-	
-	public int getRow ( ) {
+
+	public int getRow() {
 		return boardPosition.getRow();
 	}
-	
-	public int getCol ( ) {
+
+	public int getCol() {
 		return boardPosition.getCol();
 	}
 
@@ -53,10 +55,10 @@ public class Cell {
 	public void removeCellChangeObserver(CellChangeObserver o) {
 		this.cellChangeObservers.remove(o);
 	}
-	
-	public void notifyCellChangeObservers ( ) {
-		for ( CellChangeObserver observer : this.cellChangeObservers ) {
-			observer.update( this );
+
+	public void notifyCellChangeObservers() {
+		for (CellChangeObserver observer : this.cellChangeObservers) {
+			observer.update(this);
 		}
 	}
 
