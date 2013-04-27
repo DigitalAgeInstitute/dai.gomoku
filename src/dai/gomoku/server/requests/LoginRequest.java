@@ -64,7 +64,9 @@ public class LoginRequest implements Request {
 	 */
 	@Override
 	public Response process() {
-		// TODO Auto-generated method stub
+		// TODO: Authenticate the user - Does username/password combo exist
+		// TODO: If the user details are ok, create the Player and add to list of available players
+		// TODO: Return a response indicating success or failure of the authentication
 		return null;
 	}
 

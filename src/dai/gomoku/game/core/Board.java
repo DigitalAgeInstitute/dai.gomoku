@@ -17,9 +17,13 @@ public class Board {
 		this.size = size;
 		initCells();
 	}
+	
+	public int getSize ( ) {
+		return size;
+	}
 
 	public Cell getCellByPosition(BoardPosition position) {
-		return getCellByPosition(position.getRow(), position.getColumn());
+		return getCellByPosition(position.getRow(), position.getCol());
 	}
 
 	public Cell getCellByPosition(int row, int col) {

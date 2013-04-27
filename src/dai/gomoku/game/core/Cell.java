@@ -37,6 +37,14 @@ public class Cell {
 	public BoardPosition getBoardPosition() {
 		return boardPosition;
 	}
+	
+	public int getRow ( ) {
+		return boardPosition.getRow();
+	}
+	
+	public int getCol ( ) {
+		return boardPosition.getCol();
+	}
 
 	public void registerCellChangeObserver(CellChangeObserver o) {
 		this.cellChangeObservers.add(o);
@@ -48,7 +56,7 @@ public class Cell {
 	
 	public void notifyCellChangeObservers ( ) {
 		for ( CellChangeObserver observer : this.cellChangeObservers ) {
-			observer.update();
+			observer.update( this );
 		}
 	}
 

@@ -28,7 +28,7 @@ public class BoardPosition {
 	/**
 	 * @return the column
 	 */
-	public int getColumn() {
+	public int getCol() {
 		return col;
 	}
 
