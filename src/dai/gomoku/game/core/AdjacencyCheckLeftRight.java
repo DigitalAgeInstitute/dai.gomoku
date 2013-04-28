@@ -19,6 +19,7 @@ public class AdjacencyCheckLeftRight implements ContiguousCheck {
 	public AdjacencyCheckLeftRight(Board board) {
 		this.board = board;
 		leftRightAdjacencies = new ArrayList<Set<Cell>>();
+		registerWithCells();
 	}
 
 	@Override
@@ -38,6 +39,16 @@ public class AdjacencyCheckLeftRight implements ContiguousCheck {
 		
 		return present;
 	}
+	
+	private void registerWithCells() {
+		int boardSize = board.getSize();
+		for (int row = 0; row < boardSize; row++) {
+			for (int col = 0; col < boardSize; col++) {
+				board.getCellByPosition(row, col).registerCellChangeObserver(
+						this);
+			}
+		}
+	}
 
 	private void checkAdjacencies(Cell cell) {
 		Set<Cell> adjacentCells = new HashSet<Cell>();
@@ -56,7 +67,7 @@ public class AdjacencyCheckLeftRight implements ContiguousCheck {
 		while ((col >= 0) && (col < board.getSize())) {
 			Cell cellToCheck = board.getCellByPosition(cell.getBoardPosition()
 					.getRow(), col);
-			if (cellToCheck.getCellOwner().equals(cellOwner)) {
+			if (cellOwner.equals(cellToCheck.getCellOwner())) {
 				adjCells.add(cellToCheck);
 				col--;
 			} else {
@@ -72,7 +83,7 @@ public class AdjacencyCheckLeftRight implements ContiguousCheck {
 		while ((col >= 0) && (col < board.getSize())) {
 			Cell cellToCheck = board.getCellByPosition(cell.getBoardPosition()
 					.getRow(), col);
-			if (cellToCheck.getCellOwner().equals(cellOwner)) {
+			if (cellOwner.equals(cellToCheck.getCellOwner())) {
 				adjCells.add(cellToCheck);
 				col++;
 			} else {

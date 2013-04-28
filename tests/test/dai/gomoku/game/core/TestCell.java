@@ -47,6 +47,8 @@ public class TestCell {
 			failed = true;
 		}
 		
+		assertNotNull(player);
+		assertNotNull(cell1.getCellOwner());
 		assertEquals(cell1.getCellOwner(), player);
 		assertTrue(failed);
 	}

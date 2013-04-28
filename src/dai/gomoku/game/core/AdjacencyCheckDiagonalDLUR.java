@@ -13,6 +13,7 @@ public class AdjacencyCheckDiagonalDLUR implements ContiguousCheck {
 	public AdjacencyCheckDiagonalDLUR(Board board) {
 		this.board = board;
 		dlurAdjacencies = new ArrayList<Set<Cell>>();
+		registerWithCells();
 	}
 
 	@Override
@@ -32,6 +33,16 @@ public class AdjacencyCheckDiagonalDLUR implements ContiguousCheck {
 		return present;
 	}
 
+	private void registerWithCells() {
+		int boardSize = board.getSize();
+		for (int row = 0; row < boardSize; row++) {
+			for (int col = 0; col < boardSize; col++) {
+				board.getCellByPosition(row, col).registerCellChangeObserver(
+						this);
+			}
+		}
+	}
+
 	private void checkAdjacencies(Cell cell) {
 		Set<Cell> adjacentCells = new HashSet<Cell>();
 		adjacentCells.add(cell);
@@ -49,7 +60,7 @@ public class AdjacencyCheckDiagonalDLUR implements ContiguousCheck {
 		while ((row >= 0) && (col >= 0) && (row < board.getSize())
 				&& (col < board.getSize())) {
 			Cell cellToCheck = board.getCellByPosition(row, col);
-			if (cellToCheck.getCellOwner().equals(cellOwner)) {
+			if (cellOwner.equals(cellToCheck.getCellOwner())) {
 				adjacentCells.add(cellToCheck);
 				row++;
 				col--;
@@ -66,7 +77,7 @@ public class AdjacencyCheckDiagonalDLUR implements ContiguousCheck {
 		while ((row >= 0) && (col >= 0) && (row < board.getSize())
 				&& (col < board.getSize())) {
 			Cell cellToCheck = board.getCellByPosition(row, col);
-			if (cellToCheck.getCellOwner().equals(cellOwner)) {
+			if (cellOwner.equals(cellToCheck.getCellOwner())) {
 				adjacentCells.add(cellToCheck);
 				row--;
 				col++;

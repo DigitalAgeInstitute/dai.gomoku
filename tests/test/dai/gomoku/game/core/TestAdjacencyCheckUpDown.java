@@ -1,13 +1,14 @@
 package test.dai.gomoku.game.core;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import dai.gomoku.game.core.AdjacencyCheckUpDown;
 import dai.gomoku.game.core.Board;
-import dai.gomoku.game.core.CellOwnershipException;
 import dai.gomoku.game.core.HumanPlayer;
 import dai.gomoku.game.core.Player;
 
@@ -34,28 +35,21 @@ public class TestAdjacencyCheckUpDown {
 
 	@Test
 	public void testUpdate() {
-		markBoard(player1, 0, 0);
+		TestUtilities.markBoard(board, player1, 0, 0);
 		upDown.update( board.getCellByPosition(0, 0) );
 		assertFalse( upDown.checkContiguous(5) );
 	}
 
 	@Test
 	public void testCheckContiguous() {
-		markBoard(player2, 0, 1);
-		markBoard(player2, 1, 1);
-		markBoard(player2, 2, 1);
-		markBoard(player2, 3, 1);
-		markBoard(player2, 4, 1);
+		TestUtilities.markBoard(board, player2, 0, 1);
+		TestUtilities.markBoard(board, player2, 1, 1);
+		TestUtilities.markBoard(board, player2, 2, 1);
+		TestUtilities.markBoard(board, player2, 3, 1);
+		TestUtilities.markBoard(board, player2, 4, 1);
 		assertTrue( upDown.checkContiguous(5));
 	}
 	
-	private void markBoard( Player player, int row, int col ) {
-		try {
-			board.getCellByPosition(row, col).setCellOwner(player);
-		} catch (CellOwnershipException e) {
-			e.printStackTrace();
-			fail("Cell already owned!");
-		}
-	}
+	
 
 }
