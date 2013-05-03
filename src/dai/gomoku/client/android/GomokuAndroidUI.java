@@ -14,6 +14,7 @@ import android.widget.TextView;
 public class GomokuAndroidUI extends Activity {
 	ArrayList<TextView> arrTextViews;
 	int[][] coordinates = new int[15][15];
+	boolean player1 = true;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +49,7 @@ public class GomokuAndroidUI extends Activity {
 
 		arrTextViews = new ArrayList<TextView>(length);
 
+		int count = 0;
 
 		for (int i = 0; i < length; i++) {
 			final TextView textView = new TextView(this);
@@ -57,7 +59,7 @@ public class GomokuAndroidUI extends Activity {
 			// sets the column width
 
 			textView.setId(i);
-			textView.setText(" ");
+			textView.setText("");
 
 			textView.setGravity(Gravity.CENTER);
 			// sets the textView at the centre
@@ -84,7 +86,14 @@ public class GomokuAndroidUI extends Activity {
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
 					TextView tView = (TextView) v;
-					tView.setText("X");			
+					if(player1){
+						tView.setText("X");
+					}else {
+						tView.setText("O");
+					}
+					
+					player1 = (!player1);
+					
 					new FindWhoWins(arrTextViews, GomokuAndroidUI.this);
 					v = tView;
 				}
