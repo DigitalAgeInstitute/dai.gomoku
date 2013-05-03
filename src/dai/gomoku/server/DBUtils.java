@@ -39,7 +39,7 @@ public class DBUtils {
 		((MysqlDataSource) datasource).setUser("gomoku");
 		((MysqlDataSource) datasource).setPassword("gomokupassword");
 		((MysqlDataSource) datasource).setPort(3306);
-		((MysqlDataSource) datasource).setAutoReconnect(true);
+		//((MysqlDataSource) datasource).setAutoReconnect(true);
 	}
 
 	private void initConnection() throws SQLException {

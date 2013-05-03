@@ -12,9 +12,11 @@ import java.util.Set;
  * @author Muriithi Frederick Muriuki
  * 
  */
-public class AdjacencyCheckLeftRight implements ContiguousCheck {
+public class AdjacencyCheckLeftRight implements AdjacencyCheck {
 	private Board board;
 	private List<Set<Cell>> leftRightAdjacencies;
+	private Player winner;
+	private boolean hasWinner;
 
 	public AdjacencyCheckLeftRight(Board board) {
 		this.board = board;
@@ -33,11 +35,33 @@ public class AdjacencyCheckLeftRight implements ContiguousCheck {
 		for (int i = 0; i < leftRightAdjacencies.size(); i++) {
 			if (leftRightAdjacencies.get(i).size() == num) {
 				present = true;
+				hasWinner = true;
+				winner = retrieveWinner(i);
 				break;
 			}
 		}
 		
 		return present;
+	}
+	
+	@Override
+	public boolean hasWinner ( ) {
+		return hasWinner;
+	}
+	
+	@Override
+	public Player getWinner ( int win_size ) {
+		return winner;
+	}
+	
+	private Player retrieveWinner ( int index ) {
+		Iterator<Cell> it = leftRightAdjacencies.get(index).iterator();
+		Player toReturn = null ;
+		for ( ; it.hasNext(); ) {
+			toReturn = ((Cell)it.next()).getCellOwner();
+			break;
+		}
+		return toReturn;
 	}
 	
 	private void registerWithCells() {

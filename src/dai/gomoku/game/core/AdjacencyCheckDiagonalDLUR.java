@@ -6,9 +6,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-public class AdjacencyCheckDiagonalDLUR implements ContiguousCheck {
+public class AdjacencyCheckDiagonalDLUR implements AdjacencyCheck {
 	private Board board;
 	private List<Set<Cell>> dlurAdjacencies;
+	private Player winner;
+	private boolean hasWinner = false;
 
 	public AdjacencyCheckDiagonalDLUR(Board board) {
 		this.board = board;
@@ -27,10 +29,32 @@ public class AdjacencyCheckDiagonalDLUR implements ContiguousCheck {
 		for (int i = 0; i < dlurAdjacencies.size(); i++) {
 			if (dlurAdjacencies.get(i).size() == num) {
 				present = true;
+				hasWinner = true;
+				winner = retrieveWinner(i);
 				break;
 			}
 		}
 		return present;
+	}
+	
+	@Override
+	public boolean hasWinner ( ) {
+		return hasWinner;
+	}
+	
+	@Override
+	public Player getWinner ( int win_size ) {
+		return winner;
+	}
+	
+	private Player retrieveWinner ( int index ) {
+		Iterator<Cell> it = dlurAdjacencies.get(index).iterator();
+		Player toReturn = null ;
+		for ( ; it.hasNext(); ) {
+			toReturn = ((Cell)it.next()).getCellOwner();
+			break;
+		}
+		return toReturn;
 	}
 
 	private void registerWithCells() {

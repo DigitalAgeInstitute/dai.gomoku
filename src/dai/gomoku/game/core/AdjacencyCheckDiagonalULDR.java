@@ -12,13 +12,15 @@ import java.util.Set;
  * @author Muriithi Frederick Muriuki
  * 
  */
-public class AdjacencyCheckDiagonalULDR implements ContiguousCheck {
+public class AdjacencyCheckDiagonalULDR implements AdjacencyCheck {
 	private Board board;
-	private List<Set<Cell>> uldrAdjacecies;
+	private List<Set<Cell>> uldrAdjacencies;
+	private Player winner;
+	private boolean hasWinner;
 
 	public AdjacencyCheckDiagonalULDR(Board board) {
 		this.board = board;
-		uldrAdjacecies = new ArrayList<Set<Cell>>();
+		uldrAdjacencies = new ArrayList<Set<Cell>>();
 		registerWithCells();
 	}
 
@@ -30,14 +32,36 @@ public class AdjacencyCheckDiagonalULDR implements ContiguousCheck {
 	@Override
 	public boolean checkContiguous(int num) {
 		boolean present = false;
-		for (int i = 0; i < uldrAdjacecies.size(); i++) {
-			if (uldrAdjacecies.get(i).size() == num) {
+		for (int i = 0; i < uldrAdjacencies.size(); i++) {
+			if (uldrAdjacencies.get(i).size() == num) {
 				present = true;
+				hasWinner = true;
+				winner = retrieveWinner(i);
 				break;
 			}
 		}
 
 		return present;
+	}
+	
+	@Override
+	public boolean hasWinner ( ) {
+		return hasWinner;
+	}
+	
+	@Override
+	public Player getWinner ( int win_size ) {
+		return winner;
+	}
+	
+	private Player retrieveWinner ( int index ) {
+		Iterator<Cell> it = uldrAdjacencies.get(index).iterator();
+		Player toReturn = null ;
+		for ( ; it.hasNext(); ) {
+			toReturn = ((Cell)it.next()).getCellOwner();
+			break;
+		}
+		return toReturn;
 	}
 
 	private void registerWithCells() {
@@ -101,23 +125,23 @@ public class AdjacencyCheckDiagonalULDR implements ContiguousCheck {
 
 	private List<Set<Cell>> addAndReturnSubSets(Set<Cell> toAdd) {
 		List<Set<Cell>> subSets = new ArrayList<Set<Cell>>();
-		for (int i = 0; i < uldrAdjacecies.size(); i++) {
+		for (int i = 0; i < uldrAdjacencies.size(); i++) {
 			for (Iterator<Cell> it = toAdd.iterator(); it.hasNext();) {
-				if (uldrAdjacecies.get(i).contains(it.next())) {
-					toAdd.addAll(uldrAdjacecies.get(i));
-					subSets.add(uldrAdjacecies.get(i));
+				if (uldrAdjacencies.get(i).contains(it.next())) {
+					toAdd.addAll(uldrAdjacencies.get(i));
+					subSets.add(uldrAdjacencies.get(i));
 					break;
 				}
 			}
 		}
 
-		uldrAdjacecies.add(toAdd);
+		uldrAdjacencies.add(toAdd);
 		return subSets;
 	}
 
 	private void removeSubSets(List<Set<Cell>> toRemove) {
 		for (int i = 0; i < toRemove.size(); i++) {
-			uldrAdjacecies.remove(toRemove.get(i));
+			uldrAdjacencies.remove(toRemove.get(i));
 		}
 	}
 

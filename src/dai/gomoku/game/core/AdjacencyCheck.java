@@ -7,7 +7,7 @@ package dai.gomoku.game.core;
  * @author Muriithi Frederick Muriuki
  * 
  */
-public interface ContiguousCheck extends CellChangeObserver {
+public interface AdjacencyCheck extends CellChangeObserver {
 	/**
 	 * This method checks for num contiguous {@link Cell} objects. Cells are
 	 * contiguous if and only if they are next to each other and are owned by
@@ -20,4 +20,21 @@ public interface ContiguousCheck extends CellChangeObserver {
 	 *         <code>false</code> otherwise.
 	 */
 	boolean checkContiguous(final int num);
+
+	/**
+	 * Checks if the adjacency checker is the one containing the winning
+	 * adjacency
+	 * 
+	 * @return <code>true</true> if the adjacency checker has the winning adjacency, otherwise, <code>false</code>
+	 */
+	boolean hasWinner();
+
+	/**
+	 * Gets the winning player.
+	 * 
+	 * @param win_size
+	 *            The size to check for win.
+	 * @return The wining {@link Player} or null if none
+	 */
+	Player getWinner(int win_size);
 }

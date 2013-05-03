@@ -12,9 +12,11 @@ import java.util.Set;
  * @author Muriithi Frederick Muriuki
  * 
  */
-public class AdjacencyCheckUpDown implements ContiguousCheck {
+public class AdjacencyCheckUpDown implements AdjacencyCheck {
 	private Board board;
 	private List<Set<Cell>> upDownAdjacencies;
+	private Player winner;
+	private boolean hasWinner;
 
 	public AdjacencyCheckUpDown(Board board) {
 		this.board = board;
@@ -33,11 +35,32 @@ public class AdjacencyCheckUpDown implements ContiguousCheck {
 		for (int i = 0; i < upDownAdjacencies.size(); i++) {
 			if (upDownAdjacencies.get(i).size() == num) {
 				present = true;
+				hasWinner = true;
+				winner = retrieveWinner(i);
 				break;
 			}
 		}
 
 		return present;
+	}
+	
+	@Override
+	public boolean hasWinner ( ) {
+		return hasWinner;
+	}
+	
+	public Player getWinner ( int win_size ) {
+		return winner;
+	}
+	
+	private Player retrieveWinner ( int index ) {
+		Iterator<Cell> it = upDownAdjacencies.get(index).iterator();
+		Player toReturn = null ;
+		for ( ; it.hasNext(); ) {
+			toReturn = ((Cell)it.next()).getCellOwner();
+			break;
+		}
+		return toReturn;
 	}
 
 	private void registerWithCells() {
