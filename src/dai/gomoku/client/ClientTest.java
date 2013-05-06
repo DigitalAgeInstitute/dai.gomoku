@@ -16,6 +16,9 @@ public class ClientTest {
 	private Socket socket;
 	private InputStream inputFromFile;
 	private OutputStream outputToServer;
+	
+	//private final String FILE_NAME = "test.xml";
+	private final String FILE_NAME = "test.json";
 
 	public ClientTest(Socket socket) throws IOException {
 		this.socket = socket;
@@ -44,7 +47,7 @@ public class ClientTest {
 	}
 
 	private void initInputStream() throws FileNotFoundException {
-		inputFromFile = new FileInputStream(new File("test.xml"));
+		inputFromFile = new FileInputStream(new File(FILE_NAME));
 	}
 
 	private void initOutputStream() throws IOException {

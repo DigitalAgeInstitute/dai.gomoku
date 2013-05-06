@@ -70,4 +70,13 @@ public class LoginRequest implements Request {
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "LoginRequest [type=" + type + ", username=" + username
+				+ ", password=" + password + "]";
+	}
+
 }

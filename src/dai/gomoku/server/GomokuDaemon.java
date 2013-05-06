@@ -57,11 +57,10 @@ public class GomokuDaemon implements Runnable {
 						clientSocket.getLocalPort());
 				Logger.getLogger(GomokuDaemon.class.getName()).log(Level.INFO,
 						acceptMessage);
-				RequestHandler handler = new RequestHandler(clientSocket);
-				serviceThreads.execute(handler);
+				ClientHandler clientHandler = new ClientHandler(clientSocket);
+				serviceThreads.execute(clientHandler);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Logger.getLogger(GomokuDaemon.class.getName()).log(Level.SEVERE, e.getLocalizedMessage());
 			}
 		}
 
@@ -75,8 +74,7 @@ public class GomokuDaemon implements Runnable {
 			GomokuDaemon daemon = new GomokuDaemon(4010);
 			daemonThread.execute(daemon);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Logger.getLogger(GomokuDaemon.class.getName()).log(Level.SEVERE, e.getLocalizedMessage());
 		}
 		daemonThread.shutdown();
 	}

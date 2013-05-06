@@ -1,10 +1,14 @@
 package dai.gomoku.game.core;
 
+import java.net.Socket;
+
 public class HumanPlayer implements Player {
 	private String playerID;
 	private String userName;
 	private String firstName;
 	private String lastName;
+	private Socket connectedOn;
+
 	public HumanPlayer(String playerID, String userName, String firstName,
 			String lastName) {
 		super();
@@ -13,55 +17,88 @@ public class HumanPlayer implements Player {
 		this.firstName = firstName;
 		this.lastName = lastName;
 	}
+
 	/**
 	 * @return the playerID
 	 */
 	public String getPlayerID() {
 		return playerID;
 	}
+
 	/**
-	 * @param playerID the playerID to set
+	 * @param playerID
+	 *            the playerID to set
 	 */
 	public void setPlayerID(String playerID) {
 		this.playerID = playerID;
 	}
+
+	/**
+	 * 
+	 * @return the Socket by which the player is connected to the server on
+	 */
+	@Override
+	public Socket getConnectedOn() {
+		return connectedOn;
+	}
+
+	@Override
+	/**
+	 * @param connectedOn
+	 *            the Socket to set, by which the player is connected on to the server
+	 */
+	public void setConnectedOn(Socket connectedOn) {
+		this.connectedOn = connectedOn;
+	}
+
 	/**
 	 * @return the userName
 	 */
 	public String getUserName() {
 		return userName;
 	}
+
 	/**
-	 * @param userName the userName to set
+	 * @param userName
+	 *            the userName to set
 	 */
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
+
 	/**
 	 * @return the firstName
 	 */
 	public String getFirstName() {
 		return firstName;
 	}
+
 	/**
-	 * @param firstName the firstName to set
+	 * @param firstName
+	 *            the firstName to set
 	 */
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
+
 	/**
 	 * @return the lastName
 	 */
 	public String getLastName() {
 		return lastName;
 	}
+
 	/**
-	 * @param lastName the lastName to set
+	 * @param lastName
+	 *            the lastName to set
 	 */
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -78,7 +115,10 @@ public class HumanPlayer implements Player {
 				+ ((userName == null) ? 0 : userName.hashCode());
 		return result;
 	}
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -112,7 +152,10 @@ public class HumanPlayer implements Player {
 			return false;
 		return true;
 	}
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -120,6 +163,5 @@ public class HumanPlayer implements Player {
 		return "HumanPlayer [playerID=" + playerID + ", userName=" + userName
 				+ ", firstName=" + firstName + ", lastName=" + lastName + "]";
 	}
-	
-	
+
 }

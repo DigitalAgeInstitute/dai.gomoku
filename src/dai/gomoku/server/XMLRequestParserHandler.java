@@ -14,12 +14,12 @@ import org.xml.sax.helpers.DefaultHandler;
  * @author Muriithi Frederick Muriuki
  * 
  */
-public class RequestParserHandler extends DefaultHandler {
+public class XMLRequestParserHandler extends DefaultHandler {
 	private boolean atRootElement;
 	private String currentKey;
 	private Properties requestProperties;
 
-	public RequestParserHandler() {
+	public XMLRequestParserHandler() {
 		atRootElement = false;
 		currentKey = "";
 		requestProperties = new Properties();
