@@ -74,7 +74,7 @@ public class AdjacencyCheckUpDown implements AdjacencyCheck {
 	}
 
 	private void checkAdjacencies(Cell cell) {
-		Set<Cell> adjacentCells = new HashSet<>();
+		Set<Cell> adjacentCells = new HashSet<Cell>();
 		adjacentCells.add(cell);
 		checkUp(cell, adjacentCells);
 		checkDown(cell, adjacentCells);
