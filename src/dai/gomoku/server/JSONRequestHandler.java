@@ -7,12 +7,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 
-import dai.gomoku.server.jsonutils.LoginRequestCreator;
-import dai.gomoku.server.requests.LoginRequest;
+import dai.gomoku.server.requests.RequestFactory;
+import dai.gomoku.server.requests.RequestWrapper;
 
 public class JSONRequestHandler implements Runnable {
 	private InputStream inputFromClient;
@@ -43,15 +40,10 @@ public class JSONRequestHandler implements Runnable {
 		// TODO: Parse the JSON
 		System.err.println("Trying to parse");
 
-		/*JsonParser parser = new JsonParser();
-		JsonElement jsonElement = parser.parse(reader);
-		System.out.println(jsonElement.isJsonObject());
-		System.out.println(jsonElement);
-		System.err.println("Parse complete");*/
-		GsonBuilder builder = new GsonBuilder();
-		builder.registerTypeAdapter(LoginRequest.class, new LoginRequestCreator());
-		Gson parser = builder.create();
-		Request request = parser.fromJson(completeInput, LoginRequest.class);
+		
+		Gson gson = new Gson();
+		RequestWrapper wrapper = gson.fromJson(completeInput, RequestWrapper.class);
+		Request request = RequestFactory.buildRequestFromWrapper(wrapper);
 		System.out.println(request);
 
 		// TODO: Create appropriate Request object
