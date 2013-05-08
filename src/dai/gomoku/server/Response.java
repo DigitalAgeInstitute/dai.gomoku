@@ -1,5 +1,6 @@
 package dai.gomoku.server;
 
 public interface Response {
-	String getResponseXML();
+	String toXMLString();
+	String toJSONString();
 }

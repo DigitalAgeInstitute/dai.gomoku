@@ -16,8 +16,8 @@ public class ClientTest {
 	private Socket socket;
 	private InputStream inputFromFile;
 	private OutputStream outputToServer;
-	
-	//private final String FILE_NAME = "test.xml";
+
+	// private final String FILE_NAME = "test.xml";
 	private final String FILE_NAME = "test.json";
 
 	public ClientTest(Socket socket) throws IOException {
@@ -26,11 +26,12 @@ public class ClientTest {
 	}
 
 	public String readFromFile() throws IOException {
+		initInputStream();
 		BufferedReader reader = new BufferedReader(new InputStreamReader(
 				inputFromFile));
 		String content = "", input = "";
 		while ((input = reader.readLine()) != null) {
-			content += input;
+			content += "[STARTJSON]\n" + input + "\n[ENDJSON]\n";
 		}
 		return content;
 	}
@@ -42,7 +43,7 @@ public class ClientTest {
 	}
 
 	private void initStreams() throws IOException {
-		initInputStream();
+		
 		initOutputStream();
 	}
 
@@ -79,7 +80,13 @@ public class ClientTest {
 		try {
 			sock = new Socket("localhost", 4010);
 			ClientTest test = new ClientTest(sock);
+			/*
+			 * int i = 0; while (i < 10) {
+			 */
 			test.sendToServer(test.readFromFile());
+			/*
+			 * i++; }
+			 */
 			test.cleanup();
 		} catch (UnknownHostException e) {
 			e.printStackTrace();

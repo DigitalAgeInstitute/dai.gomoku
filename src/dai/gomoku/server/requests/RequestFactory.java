@@ -34,6 +34,8 @@ public class RequestFactory {
 		switch (wrapper.getType()) {
 		case "LOGIN":
 			return buildLoginRequestFromWrapper(wrapper);
+		case "MAKEMOVE":
+			return buildMakeMoveRequestFromWrapper(wrapper);
 		default:
 			return buildUnknownRequestFromWrapper(wrapper);
 		}
@@ -54,6 +56,11 @@ public class RequestFactory {
 		return new LoginRequest(wrapper.getUsername(), wrapper.getPassword());
 	}
 
+	public static Request buildMakeMoveRequestFromWrapper(RequestWrapper wrapper) {
+		return new MakeMoveRequest(wrapper.getGameID(), wrapper.getUsername(),
+				wrapper.getRow(), wrapper.getCol());
+	}
+
 	/**
 	 * Creates a new {@link UnknownRequest} object from the passed in
 	 * {@link RequestWrapper} object
@@ -68,7 +75,7 @@ public class RequestFactory {
 	public static Request buildUnknownRequestFromWrapper(RequestWrapper wrapper) {
 		// TODO: Implement a method that creates a java.util.Properties object
 		// and uses it to create an UnknownRequestObject
-		return new UnknownRequest();
+		return new UnknownRequest( wrapper.getType() );
 	}
 
 	/**
@@ -112,7 +119,7 @@ public class RequestFactory {
 	public static Request buildUnknownRequestFromProperties(
 			Properties properties) {
 		UnknownRequest unknown = new UnknownRequest(properties.get("type")
-				.toString(), properties);
+				.toString());
 		return unknown;
 	}
 }

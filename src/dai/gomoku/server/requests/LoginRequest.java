@@ -1,7 +1,11 @@
 package dai.gomoku.server.requests;
 
+import dai.gomoku.game.core.Player;
+import dai.gomoku.server.AvailablePlayersList;
+import dai.gomoku.server.DBUtils;
 import dai.gomoku.server.Request;
 import dai.gomoku.server.Response;
+import dai.gomoku.server.responses.LoginResponse;
 
 public class LoginRequest implements Request {
 	private String type = "LOGIN";
@@ -65,12 +69,23 @@ public class LoginRequest implements Request {
 	@Override
 	public Response process() {
 		// TODO: Authenticate the user - Does username/password combo exist
-		// TODO: If the user details are ok, create the Player and add to list of available players
-		// TODO: Return a response indicating success or failure of the authentication
-		return null;
+		if (DBUtils.checkUser(username, password)) {
+			// TODO: If the user details are ok, create the Player and add to
+			// list of available players
+			Player player = DBUtils.createPlayer(username);
+			AvailablePlayersList.getInstance().addPlayerToList(player);
+
+			// TODO: Return a response indicating success of the authentication
+			return new LoginResponse(LoginResponse.OK);
+		} else {
+			// TODO: Return a response indicating failure of the authentication
+			return new LoginResponse(LoginResponse.FAIL);
+		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

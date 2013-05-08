@@ -1,21 +1,18 @@
 package dai.gomoku.server.requests;
 
-import java.util.Properties;
-
 import dai.gomoku.server.Request;
 import dai.gomoku.server.Response;
+import dai.gomoku.server.responses.UnknownRequestResponse;
 
 public class UnknownRequest implements Request {
 	private String type;
-	private Properties otherProperties;
-	
-	public UnknownRequest ( ) {
+
+	public UnknownRequest() {
 		type = "UNKNOWN";
 	}
-	
-	public UnknownRequest ( String type, Properties properties ) {
+
+	public UnknownRequest(String type) {
 		this.type = type;
-		this.otherProperties = properties;
 	}
 
 	/**
@@ -26,31 +23,26 @@ public class UnknownRequest implements Request {
 	}
 
 	/**
-	 * @param type the type to set
+	 * @param type
+	 *            the type to set
 	 */
 	public void setType(String type) {
 		this.type = type;
 	}
 
-	/**
-	 * @return the otherProperties
-	 */
-	public Properties getOtherProperties() {
-		return otherProperties;
-	}
-
-	/**
-	 * @param otherProperties the otherProperties to set
-	 */
-	public void setOtherProperties(Properties otherProperties) {
-		this.otherProperties = otherProperties;
-	}
-
 	@Override
 	public Response process() {
-		// TODO Auto-generated method stub
-		return null;
+		return new UnknownRequestResponse(type);
 	}
-	
-	
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "UnknownRequest [type=" + type + "]";
+	}
+
 }

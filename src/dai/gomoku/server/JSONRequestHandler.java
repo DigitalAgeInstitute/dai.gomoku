@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 
 import com.google.gson.Gson;
 
@@ -26,30 +27,51 @@ public class JSONRequestHandler implements Runnable {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(
 				inputFromClient));
 		String inputLine;
-		String completeInput = "";
+		
+
 		try {
-			while ( (inputLine = reader.readLine()) != null ) {
-				completeInput += inputLine;
+			while ((inputLine = reader.readLine()) != null) {
+				if (inputLine.equals("[STARTJSON]")) {
+					String completeInput = "";
+					while ((inputLine = reader.readLine()) != null) {
+						if (inputLine.equals("[ENDJSON]")) {
+							break;
+						} else {
+							completeInput += inputLine;
+						}
+						// TODO: Parse the JSON
+						Gson gson = new Gson();
+						RequestWrapper wrapper = gson.fromJson(
+								completeInput, RequestWrapper.class);
+
+						// TODO: Create appropriate Request object
+						Request request = RequestFactory
+								.buildRequestFromWrapper(wrapper);
+						System.out.println("REQUEST ==> " + request);
+						// TODO: Process the request to get a response
+						Response response = request.process();
+						System.out.println("RESPONSE ==> " + response);
+
+						// TODO: (synchronized)Send the response to the
+						// client
+						// sendResponse( response );
+					}
+				}
+
 			}
+
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (NullPointerException npe) {
+			npe.printStackTrace();
 		}
-		
 
-		// TODO: Parse the JSON
-		System.err.println("Trying to parse");
+	}
 
-		
-		Gson gson = new Gson();
-		RequestWrapper wrapper = gson.fromJson(completeInput, RequestWrapper.class);
-		Request request = RequestFactory.buildRequestFromWrapper(wrapper);
-		System.out.println(request);
-
-		// TODO: Create appropriate Request object
-		// TODO: Process the request to get a response
-		// TODO: (synchronized)Send the response to the client
-
+	private synchronized void sendResponse(Response response) {
+		String responseJson = "\n[STARTJSON]\n" + response.toJSONString()  + "\n[ENDJSON]\n";
+		PrintWriter writer = new PrintWriter(outputToClient);
+		writer.write(responseJson);
 	}
 
 }

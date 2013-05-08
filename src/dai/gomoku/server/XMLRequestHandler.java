@@ -44,7 +44,7 @@ public class XMLRequestHandler implements Runnable {
 			Response response = request.process();
 
 			PrintWriter writer = new PrintWriter(outputToClient);
-			writer.write(response.getResponseXML());
+			writer.write(response.toXMLString());
 			writer.flush();
 		} catch (ParserConfigurationException e) {
 			Logger.getLogger(XMLRequestHandler.class.getName()).log(

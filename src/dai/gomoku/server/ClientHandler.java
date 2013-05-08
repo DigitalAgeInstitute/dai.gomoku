@@ -42,9 +42,7 @@ public class ClientHandler implements Runnable {
 			// TODO: Implement what the system does
 			try {
 				int num = inputFromClient.available();
-				
 				if (num != 0) {
-					System.err.println(num);
 					JSONRequestHandler jsonParserHandler = new JSONRequestHandler(
 							inputFromClient, outputToClient);
 					handlers.execute(jsonParserHandler);

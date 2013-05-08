@@ -28,6 +28,19 @@ public class RequestWrapper {
 	@SerializedName("password")
 	private String password;
 
+	@SerializedName("gameID")
+	private String gameID;
+
+	@SerializedName("row")
+	private int row;
+
+	@SerializedName("col")
+	private int col;
+
+	/*
+	 * The accessor methods
+	 */
+
 	public String getType() {
 		return type;
 	}
@@ -44,6 +57,27 @@ public class RequestWrapper {
 	 */
 	public String getPassword() {
 		return password;
+	}
+
+	/**
+	 * @return the gameID
+	 */
+	public String getGameID() {
+		return gameID;
+	}
+
+	/**
+	 * @return the row
+	 */
+	public int getRow() {
+		return row;
+	}
+
+	/**
+	 * @return the col
+	 */
+	public int getCol() {
+		return col;
 	}
 
 }
