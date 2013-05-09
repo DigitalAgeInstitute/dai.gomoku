@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Color;
+//import android.graphics.Color;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class FindWhoWins {
+public class GomokuLogicToFindWinner {
 
 	int i, step, counter =0;
 	Boolean winnerFoundNowExit =false;
@@ -19,7 +19,7 @@ public class FindWhoWins {
 	// countY stands for the y-axis
 	// step stand for the steps made in a particular direction
 
-	public FindWhoWins(ArrayList<TextView> arrTextViews, Context cntx) {
+	public GomokuLogicToFindWinner(ArrayList<TextView> arrTextViews, Context cntx) {
 		// TODO Auto-generated constructor stub
 		
 		int dirX[] = { -1, -1, -1, 0, 0, 1, 1, 1 }; // this are the
@@ -38,7 +38,6 @@ public class FindWhoWins {
 				//this can either be X or O or a space
 				
 				if (onSpot.equals("X") || onSpot.equals("O")){ // this here checks what the string onSpot is set to if either X or O
-					Toast.makeText(cntx, onSpot, Toast.LENGTH_SHORT).show();
 					for (i = 0; i < 8; i++) {// at this point it loop through all the possible ways around onSpot
 						int xc, yc;
 
@@ -49,10 +48,10 @@ public class FindWhoWins {
 							
 							if (xc >-1 && xc < 15 && yc >-1 && yc <15) {
 								if (!onSpot.equals(arrTextViews.get((xc*15)+yc).getText().toString())) {									
-									arrTextViews.get((xc*15)+yc).setBackgroundColor(Color.RED);
+									//arrTextViews.get((xc*15)+yc).setBackgroundColor(Color.RED);
 									break;
 								} else {
-									arrTextViews.get((countX*15)+countY).setBackgroundColor(Color.YELLOW);
+									//arrTextViews.get((countX*15)+countY).setBackgroundColor(Color.YELLOW);
 								}
 							} else {
 								break;
@@ -81,7 +80,7 @@ public class FindWhoWins {
 				
 			}
 			if(winnerFoundNowExit==true){
-				winnerFoundNowExit =false;
+				winnerFoundNowExit =(!winnerFoundNowExit);
 				break;
 			}
 		}

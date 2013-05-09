@@ -2,6 +2,8 @@ package dai.gomoku.client.android;
 
 import java.util.ArrayList;
 import android.app.Activity;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -10,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class GomokuAndroidUI extends Activity {
 	ArrayList<TextView> arrTextViews;
@@ -41,16 +44,14 @@ public class GomokuAndroidUI extends Activity {
 		// here the row and column params are assigned to variable to be used
 		// later
 
-		int length = 225;
+		int length = 81;
 		int index = 0;
-		int no_of_column = 15;
+		int no_of_column = 9;
 		int num_of_row = length / no_of_column;
 		// variable are created and assign values
 
 		arrTextViews = new ArrayList<TextView>(length);
-
-		int count = 0;
-
+		
 		for (int i = 0; i < length; i++) {
 			final TextView textView = new TextView(this);
 			// creates an instance of class TextView
@@ -73,10 +74,13 @@ public class GomokuAndroidUI extends Activity {
 
 			if ((i % 2) == 0) {
 
-				textView.setBackgroundDrawable(getResources().getDrawable(
-						R.drawable.bckgrd));
+				textView.setBackgroundColor(Color.rgb(166, 172, 169));
 				// sets the colour of the TextView
-			}/*
+			} else{
+				textView.setBackgroundColor(Color.rgb(227, 233, 227));
+			}
+			
+			/*
 			 * else { textView.setBackgroundDrawable(getResources().getDrawable(
 			 * R.drawable.first_aid_kit)); }
 			 */
@@ -86,15 +90,27 @@ public class GomokuAndroidUI extends Activity {
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
 					TextView tView = (TextView) v;
-					if(player1){
-						tView.setText("X");
-					}else {
-						tView.setText("O");
+					if(tView.getText().equals("")){
+						if(player1){
+							tView.setText("X");
+							tView.setTextColor(Color.BLUE);
+							tView.setTypeface(null, Typeface.BOLD);
+						}else {
+							tView.setText("O");
+							tView.setTextColor(Color.BLUE);
+							tView.setTypeface(null, Typeface.BOLD);
+						}
+					} else{
+						Toast.makeText(
+								getApplication(),
+								((tView.getText()) == "O" ? "player O cant play here"
+										: "player X cant play here"),
+								Toast.LENGTH_SHORT).show();
 					}
 					
 					player1 = (!player1);
 					
-					new FindWhoWins(arrTextViews, GomokuAndroidUI.this);
+					//new FindWhoWins(arrTextViews, GomokuAndroidUI.this);
 					v = tView;
 				}
 
@@ -121,7 +137,7 @@ public class GomokuAndroidUI extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// TODO Auto-generated method stub
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.menu, menu);
+		inflater.inflate(R.menu.main, menu);
 		return true;
 	}
 
