@@ -1,21 +1,40 @@
-package dai.gomoku.server.requests;
+package dai.gomoku.server.responses;
 
-import dai.gomoku.server.Request;
 import dai.gomoku.server.Response;
-import dai.gomoku.server.responses.MakeMoveResponse;
 
-public class MakeMoveRequest implements Request {
-	private String type = "MAKEMOVE";
+public class MakeMoveResponse implements Response {
+	public static final String OK = "OK";
+	public static final String FAIL = "FAIL";
+
+	private String type = "MAKEMOVERESPONSE";
+	private String status;
 	private String gameID;
 	private String username;
 	private int row;
 	private int col;
 
-	public MakeMoveRequest(String gameID, String username, int row, int col) {
+	public MakeMoveResponse(String status, String gameID, String username,
+			int row, int col) {
+		this.status = status;
 		this.gameID = gameID;
 		this.username = username;
 		this.row = row;
 		this.col = col;
+	}
+
+	/**
+	 * @return the status
+	 */
+	public String getStatus() {
+		return status;
+	}
+
+	/**
+	 * @param status
+	 *            the status to set
+	 */
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 	/**
@@ -78,17 +97,17 @@ public class MakeMoveRequest implements Request {
 		this.col = col;
 	}
 
-	/**
-	 * @return the type
-	 */
-	public String getType() {
-		return type;
+	@Override
+	public String toXMLString() {
+		// TODO Generate appropriate XML
+		return null;
 	}
 
 	@Override
-	public Response process() {
-		// TODO: Implement this correctly...
-		return new MakeMoveResponse(MakeMoveResponse.FAIL, gameID, username, row, col);
+	public String toJSONString() {
+		return String
+				.format("{ \"type\":\"%s\", \"status\":\"%s\", \"gameID\":\"%s\", \"username\":\"%s\", \"row\":%d, \"col\":%d }",
+						type, status, gameID, username, row, col);
 	}
 
 	/*
@@ -98,9 +117,9 @@ public class MakeMoveRequest implements Request {
 	 */
 	@Override
 	public String toString() {
-		return "MakeMoveRequest [type=" + type + ", gameID=" + gameID
-				+ ", username=" + username + ", row=" + row + ", col=" + col
-				+ "]";
+		return "MakeMoveResponse [type=" + type + ", status=" + status
+				+ ", gameID=" + gameID + ", username=" + username + ", row="
+				+ row + ", col=" + col + "]";
 	}
 
 }

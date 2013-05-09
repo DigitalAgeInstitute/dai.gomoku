@@ -1,5 +1,7 @@
 package dai.gomoku.server.requests;
 
+import java.sql.SQLException;
+
 import dai.gomoku.game.core.Player;
 import dai.gomoku.server.AvailablePlayersList;
 import dai.gomoku.server.DBUtils;
@@ -69,18 +71,23 @@ public class LoginRequest implements Request {
 	@Override
 	public Response process() {
 		// TODO: Authenticate the user - Does username/password combo exist
-		if (DBUtils.checkUser(username, password)) {
-			// TODO: If the user details are ok, create the Player and add to
-			// list of available players
-			Player player = DBUtils.createPlayer(username);
-			AvailablePlayersList.getInstance().addPlayerToList(player);
+		try {
+			if (DBUtils.checkUser(username, password)) {
+				// TODO: If the user details are ok, create the Player and add to
+				// list of available players
+				Player player = DBUtils.createPlayer(username);
+				AvailablePlayersList.getInstance().addPlayerToList(player);
 
-			// TODO: Return a response indicating success of the authentication
-			return new LoginResponse(LoginResponse.OK);
-		} else {
-			// TODO: Return a response indicating failure of the authentication
-			return new LoginResponse(LoginResponse.FAIL);
+				// TODO: Return a response indicating success of the authentication
+				return new LoginResponse(LoginResponse.OK);
+			} else {
+				// TODO: Return a response indicating failure of the authentication
+				return new LoginResponse(LoginResponse.FAIL);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
+		return null;
 	}
 
 	/*

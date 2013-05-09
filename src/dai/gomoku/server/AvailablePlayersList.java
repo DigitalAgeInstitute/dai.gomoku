@@ -35,7 +35,7 @@ public class AvailablePlayersList {
 		// use double-checked locking to ensure that availablePlayersList is not
 		// reinitialised - Will not work for java1.4 and earlier
 		if (availablePlayersList == null) {
-			synchronized (availablePlayersList) {
+			synchronized ("") {
 				if (availablePlayersList == null) {
 					availablePlayersList = new AvailablePlayersList();
 				}

@@ -1,3 +1,4 @@
 { "type":"WEIRDREQUEST", "form":"S&M", "accessories":["whip", "handcuffs"] }
 { "type":"MAKEMOVE", "gameID":"12hdyrt7465", "username":"86094jfhgry", "row":7, "col":9 }
 { "type":"LOGIN", "username":"someuser", "password":"somepass" }
+{ "type":"LOGIN", "username":"fredmanglis", "password":"freddy" }

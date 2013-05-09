@@ -1,12 +1,14 @@
 package dai.gomoku.server;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 
+import dai.gomoku.game.core.HumanPlayer;
 import dai.gomoku.game.core.Player;
 
 /**
@@ -18,48 +20,58 @@ import dai.gomoku.game.core.Player;
  * 
  */
 public class DBUtils {
-	private DataSource datasource;
-	private Connection connection;
-
-	public DBUtils() throws SQLException {
-		initDataSource();
-		initConnection();
-	}
 
 	/**
 	 * @return the connection
+	 * @throws SQLException 
 	 */
-	public Connection getConnection() {
-		return connection;
+	public static Connection getConnection() throws SQLException {
+		return createDataSource().getConnection();
 	}
 
-	public static boolean checkUser(String username, String password) {
-		// TODO: Check database for username/password combo
-		return false;
+	public static boolean checkUser(String username, String password) throws SQLException {
+		String userSQL = String
+				.format("SELECT * FROM signup WHERE username LIKE '%s' AND password LIKE password('%s')",
+						username, password);
+		ResultSet rs = getResultSet( userSQL );
+		String user = null;
+		while ( rs.next() ) {
+			user = rs.getString("username");
+		}
+		if ( user == null ) {
+			return false;
+		} else {
+			return true;
+		}
 	}
-	
-	public static Player createPlayer ( String username ) {
-		// TODO: Create and return a player from database details
-		return null;
+
+	private static ResultSet getResultSet(String userSQL) throws SQLException {
+		return getConnection().createStatement().executeQuery(userSQL);
+	}
+
+	public static Player createPlayer(String username) throws SQLException {
+		String userSQL = String.format("SELECT * FROM signup WHERE username LIKE '%s'", username);
+		ResultSet rs = getResultSet(userSQL);
+		Player player = null;
+		while ( rs.next() ) {
+			player = new HumanPlayer(rs.getString("userid"), rs.getString("username"), rs.getString("fname"), rs.getString("lname"));
+		}
+		return player;
 	}
 
 	/*
 	 * Private utility methods
 	 */
-	
-	private void initDataSource() {
+
+	private static DataSource createDataSource() {
 		// TODO: Have these properties in a properties file, then read them from
 		// the properties file
-		datasource = new MysqlDataSource();
+		DataSource datasource = new MysqlDataSource();
 		((MysqlDataSource) datasource).setDatabaseName("gomoku");
 		((MysqlDataSource) datasource).setUser("gomoku");
-		((MysqlDataSource) datasource).setPassword("gomokupassword");
+		((MysqlDataSource) datasource).setPassword("gomoku");
 		((MysqlDataSource) datasource).setPort(3306);
-		// ((MysqlDataSource) datasource).setAutoReconnect(true);
-	}
-
-	private void initConnection() throws SQLException {
-		connection = datasource.getConnection();
+		return datasource;
 	}
 
 }
