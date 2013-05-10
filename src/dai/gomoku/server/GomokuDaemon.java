@@ -25,6 +25,31 @@ public class GomokuDaemon implements Runnable {
 		this.stopped = true;
 	}
 
+	@Override
+	public void run() {
+		System.out
+				.println("Server listening on port " + ssocket.getLocalPort());
+		while (!stopped) {
+			Socket clientSocket;
+			try {
+				clientSocket = ssocket.accept();
+				String acceptMessage = String.format(
+						"Serving client of address %s on port %d", clientSocket
+								.getInetAddress().getHostAddress(),
+						clientSocket.getLocalPort());
+				Logger.getLogger(GomokuDaemon.class.getName()).log(Level.INFO,
+						acceptMessage);
+				JSONRequestHandler clientHandler = new JSONRequestHandler(clientSocket);
+				serviceThreads.execute(clientHandler);
+			} catch (IOException e) {
+				Logger.getLogger(GomokuDaemon.class.getName()).log(Level.SEVERE, e.getLocalizedMessage());
+			}
+		}
+
+		serviceThreads.shutdown();
+		releaseResources();
+	}
+	
 	private void initSSocket(int port) throws IOException {
 		this.ssocket = new ServerSocket(port);
 	}
@@ -41,31 +66,6 @@ public class GomokuDaemon implements Runnable {
 		if (ssocket != null) {
 			ssocket.close();
 		}
-	}
-
-	@Override
-	public void run() {
-		System.out
-				.println("Server listening on port " + ssocket.getLocalPort());
-		while (!stopped) {
-			Socket clientSocket;
-			try {
-				clientSocket = ssocket.accept();
-				String acceptMessage = String.format(
-						"Serving client of address %s on port %d", clientSocket
-								.getInetAddress().getHostAddress(),
-						clientSocket.getLocalPort());
-				Logger.getLogger(GomokuDaemon.class.getName()).log(Level.INFO,
-						acceptMessage);
-				ClientHandler clientHandler = new ClientHandler(clientSocket);
-				serviceThreads.execute(clientHandler);
-			} catch (IOException e) {
-				Logger.getLogger(GomokuDaemon.class.getName()).log(Level.SEVERE, e.getLocalizedMessage());
-			}
-		}
-
-		serviceThreads.shutdown();
-		releaseResources();
 	}
 
 	public static void main(String[] args) {

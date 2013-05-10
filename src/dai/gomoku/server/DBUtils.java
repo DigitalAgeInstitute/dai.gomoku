@@ -98,13 +98,12 @@ public class DBUtils {
 	public static boolean registerHumanPlayer(HumanPlayer player,
 			String password) throws SQLException {
 		if (!usernameExists(player.getUserName())) {
-			String registerString = String.format(
-					"INSERT INTO signup(fname, mname, lname, email, contacts, "
-							+ "password, username) VALUES('%s', '%s', "
-							+ "'%s', '%s', '%d', '%s', '%s')",
-					player.getFirstName(), player.getMiddleName(),
-					player.getLastName(), player.getEmail(),
-					player.getContacts(), password, player.getUserName());
+			String registerString = String
+					.format("INSERT INTO signup(fname, lname, email, contacts, "
+							+ "password, username) VALUES('%s', '%s', '%s', '%s', '%s', '%s')",
+							player.getFirstName(), player.getLastName(),
+							player.getEmail(), player.getContacts(), password,
+							player.getUserName());
 			getConnection().createStatement().execute(registerString);
 			return true;
 		} else {
@@ -118,6 +117,7 @@ public class DBUtils {
 
 	/**
 	 * Creates and returns a {@link DataSource} object
+	 * 
 	 * @return A {@link DataSource} object
 	 */
 	private static DataSource createDataSource() {

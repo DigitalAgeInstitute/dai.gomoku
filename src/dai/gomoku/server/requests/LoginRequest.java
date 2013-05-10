@@ -1,5 +1,6 @@
 package dai.gomoku.server.requests;
 
+import java.net.Socket;
 import java.sql.SQLException;
 
 import dai.gomoku.game.core.Player;
@@ -13,10 +14,13 @@ public class LoginRequest implements Request {
 	private String type = "LOGIN";
 	private String username;
 	private String password;
+	private Socket connectionSocket;
 
-	public LoginRequest(String username, String password) {
+	public LoginRequest(String username, String password,
+			Socket connectionSocket) {
 		this.username = username;
 		this.password = password;
+		this.connectionSocket = connectionSocket;
 	}
 
 	/**
@@ -65,6 +69,21 @@ public class LoginRequest implements Request {
 	}
 
 	/**
+	 * @return the connectionSocket
+	 */
+	public Socket getConnectionSocket() {
+		return connectionSocket;
+	}
+
+	/**
+	 * @param connectionSocket
+	 *            the connectionSocket to set
+	 */
+	public void setConnectionSocket(Socket connectionSocket) {
+		this.connectionSocket = connectionSocket;
+	}
+
+	/**
 	 * This method is what actually runs the login process, returning an
 	 * appropriate response depending on the outcome of the process.
 	 */
@@ -73,15 +92,19 @@ public class LoginRequest implements Request {
 		// TODO: Authenticate the user - Does username/password combo exist
 		try {
 			if (DBUtils.checkUser(username, password)) {
-				// TODO: If the user details are ok, create the Player and add to
+				// TODO: If the user details are ok, create the Player and add
+				// to
 				// list of available players
 				Player player = DBUtils.createPlayer(username);
+				player.setConnectedOn(connectionSocket);
 				AvailablePlayersList.getInstance().addPlayerToList(player);
 
-				// TODO: Return a response indicating success of the authentication
+				// TODO: Return a response indicating success of the
+				// authentication
 				return new LoginResponse(LoginResponse.OK);
 			} else {
-				// TODO: Return a response indicating failure of the authentication
+				// TODO: Return a response indicating failure of the
+				// authentication
 				return new LoginResponse(LoginResponse.FAIL);
 			}
 		} catch (SQLException e) {

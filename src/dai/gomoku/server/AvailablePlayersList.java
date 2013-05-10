@@ -2,6 +2,7 @@ package dai.gomoku.server;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -65,6 +66,18 @@ public class AvailablePlayersList {
 	 */
 	public List<Player> getAvailablePlayersList() {
 		return new ArrayList<Player>(availablePlayers);
+	}
+	
+	public Player getPlayerByUsername ( String username ) {
+		Player player = null;
+		for ( Iterator<Player> it =  availablePlayers.iterator(); it.hasNext(); )
+		{
+			Player temp = it.next();
+			if( temp.getUserName().equals(username) ) {
+				player = temp;
+			}
+		}
+		return player;
 	}
 
 }

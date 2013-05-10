@@ -3,20 +3,19 @@ package dai.gomoku.game.core;
 import java.net.Socket;
 
 public class HumanPlayer implements Player {
-	private String playerID;
+	private String userID;
 	private String userName;
 	private String firstName;
-	private String middleName;
 	private String lastName;
 	private String email;
 	private int contacts;
 
 	private Socket connectedOn;
 
-	public HumanPlayer(String playerID, String userName, String firstName,
+	public HumanPlayer(String userID, String userName, String firstName,
 			String lastName) {
 		super();
-		this.playerID = playerID;
+		this.userID = userID;
 		this.userName = userName;
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -25,16 +24,16 @@ public class HumanPlayer implements Player {
 	/**
 	 * @return the playerID
 	 */
-	public String getPlayerID() {
-		return playerID;
+	public String getUserID() {
+		return userID;
 	}
 
 	/**
-	 * @param playerID
+	 * @param userID
 	 *            the playerID to set
 	 */
-	public void setPlayerID(String playerID) {
-		this.playerID = playerID;
+	public void setUserID(String userID) {
+		this.userID = userID;
 	}
 
 	/**
@@ -83,21 +82,6 @@ public class HumanPlayer implements Player {
 	 */
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
-	}
-
-	/**
-	 * @return the middleName
-	 */
-	public String getMiddleName() {
-		return middleName;
-	}
-
-	/**
-	 * @param middleName
-	 *            the middleName to set
-	 */
-	public void setMiddleName(String middleName) {
-		this.middleName = middleName;
 	}
 
 	/**
@@ -159,7 +143,7 @@ public class HumanPlayer implements Player {
 		result = prime * result
 				+ ((lastName == null) ? 0 : lastName.hashCode());
 		result = prime * result
-				+ ((playerID == null) ? 0 : playerID.hashCode());
+				+ ((userID == null) ? 0 : userID.hashCode());
 		result = prime * result
 				+ ((userName == null) ? 0 : userName.hashCode());
 		return result;
@@ -189,10 +173,10 @@ public class HumanPlayer implements Player {
 				return false;
 		} else if (!lastName.equals(other.lastName))
 			return false;
-		if (playerID == null) {
-			if (other.playerID != null)
+		if (userID == null) {
+			if (other.userID != null)
 				return false;
-		} else if (!playerID.equals(other.playerID))
+		} else if (!userID.equals(other.userID))
 			return false;
 		if (userName == null) {
 			if (other.userName != null)
@@ -209,7 +193,7 @@ public class HumanPlayer implements Player {
 	 */
 	@Override
 	public String toString() {
-		return "HumanPlayer [playerID=" + playerID + ", userName=" + userName
+		return "HumanPlayer [playerID=" + userID + ", userName=" + userName
 				+ ", firstName=" + firstName + ", lastName=" + lastName + "]";
 	}
 

@@ -11,6 +11,11 @@ import java.net.Socket;
 public interface Player {
 	/**
 	 * 
+	 * @return
+	 */
+	public String getUserName ( );
+	/**
+	 * 
 	 * @return the Socket by which the player is connected to the server on
 	 */
 	public Socket getConnectedOn ( );

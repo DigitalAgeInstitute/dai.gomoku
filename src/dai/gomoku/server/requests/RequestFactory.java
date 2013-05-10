@@ -1,7 +1,6 @@
 package dai.gomoku.server.requests;
 
-import java.util.Properties;
-
+import dai.gomoku.server.JSONRequestHandler;
 import dai.gomoku.server.Request;
 
 /**
@@ -30,10 +29,10 @@ public class RequestFactory {
 	 * 
 	 * @return an object that implements the {@link Request} interface
 	 */
-	public static Request buildRequestFromWrapper(RequestWrapper wrapper) {
+	public static Request buildRequestFromWrapper(RequestWrapper wrapper, JSONRequestHandler parentThread) {
 		switch (wrapper.getType()) {
 		case "LOGIN":
-			return buildLoginRequestFromWrapper(wrapper);
+			return buildLoginRequestFromWrapper(wrapper, parentThread);
 		case "MAKEMOVE":
 			return buildMakeMoveRequestFromWrapper(wrapper);
 		default:
@@ -52,8 +51,8 @@ public class RequestFactory {
 	 * @return an object that implements the {@link Request} interface, in this
 	 *         case, an object of the {@link LoginRequest} class
 	 */
-	public static Request buildLoginRequestFromWrapper(RequestWrapper wrapper) {
-		return new LoginRequest(wrapper.getUsername(), wrapper.getPassword());
+	public static Request buildLoginRequestFromWrapper(RequestWrapper wrapper, JSONRequestHandler parent) {
+		return new LoginRequest(wrapper.getUsername(), wrapper.getPassword(), parent.getClientSocket());
 	}
 
 	public static Request buildMakeMoveRequestFromWrapper(RequestWrapper wrapper) {
@@ -77,49 +76,5 @@ public class RequestFactory {
 		// and uses it to create an UnknownRequestObject
 		return new UnknownRequest( wrapper.getType() );
 	}
-
-	/**
-	 * Builds a {@link Request} object from a passed in {@link Properties}
-	 * object
-	 * 
-	 * @param properties
-	 * @return
-	 */
-	public static Request buildRequestFromProperties(Properties properties) {
-		if (properties.get("type").equals("LOGIN")) {
-			return buildLoginRequestFromProperties(properties);
-		} else {
-			return buildUnknownRequestFromProperties(properties);
-		}
-	}
-
-	/**
-	 * Builds a {@link LoginRequest} object from the given {@link Properties}
-	 * object
-	 * 
-	 * @param properties
-	 *            The {@link Properties} object from which to build a request
-	 * 
-	 * @return A new {@link LoginRequest} object created from the properties
-	 */
-	public static Request buildLoginRequestFromProperties(Properties properties) {
-		return new LoginRequest(properties.get("username").toString(),
-				properties.get("password").toString());
-	}
-
-	/**
-	 * Builds an {@link UnknownRequest} object from the given {@link Properties}
-	 * object
-	 * 
-	 * @param properties
-	 *            The {@link Properties} object from which to build a request
-	 * 
-	 * @return A new {@link UnknownRequest} object created from the properties
-	 */
-	public static Request buildUnknownRequestFromProperties(
-			Properties properties) {
-		UnknownRequest unknown = new UnknownRequest(properties.get("type")
-				.toString());
-		return unknown;
-	}
+	
 }
