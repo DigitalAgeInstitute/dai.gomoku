@@ -6,7 +6,11 @@ public class HumanPlayer implements Player {
 	private String playerID;
 	private String userName;
 	private String firstName;
+	private String middleName;
 	private String lastName;
+	private String email;
+	private int contacts;
+
 	private Socket connectedOn;
 
 	public HumanPlayer(String playerID, String userName, String firstName,
@@ -82,6 +86,21 @@ public class HumanPlayer implements Player {
 	}
 
 	/**
+	 * @return the middleName
+	 */
+	public String getMiddleName() {
+		return middleName;
+	}
+
+	/**
+	 * @param middleName
+	 *            the middleName to set
+	 */
+	public void setMiddleName(String middleName) {
+		this.middleName = middleName;
+	}
+
+	/**
 	 * @return the lastName
 	 */
 	public String getLastName() {
@@ -94,6 +113,36 @@ public class HumanPlayer implements Player {
 	 */
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
+	}
+
+	/**
+	 * @return the email
+	 */
+	public String getEmail() {
+		return email;
+	}
+
+	/**
+	 * @param email
+	 *            the email to set
+	 */
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	/**
+	 * @return the contacts
+	 */
+	public int getContacts() {
+		return contacts;
+	}
+
+	/**
+	 * @param contacts
+	 *            the contacts to set
+	 */
+	public void setContacts(int contacts) {
+		this.contacts = contacts;
 	}
 
 	/*
