@@ -28,15 +28,15 @@ public class TestHumanPlayer {
 
 	@Test
 	public void testGetPlayerID() {
-		assertEquals("1", hPlayer1.getPlayerID());
-		assertEquals("2", hPlayer2.getPlayerID());
+		assertEquals("1", hPlayer1.getUserID());
+		assertEquals("2", hPlayer2.getUserID());
 	}
 
 	@Test
 	public void testSetPlayerID() {
-		assertEquals("1", hPlayer1.getPlayerID());
-		hPlayer1.setPlayerID("13");
-		assertEquals("13", hPlayer1.getPlayerID());
+		assertEquals("1", hPlayer1.getUserID());
+		hPlayer1.setUserID("13");
+		assertEquals("13", hPlayer1.getUserID());
 	}
 
 	@Test

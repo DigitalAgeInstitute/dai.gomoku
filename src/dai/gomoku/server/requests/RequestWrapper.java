@@ -37,6 +37,15 @@ public class RequestWrapper {
 	@SerializedName("col")
 	private int col;
 
+	@SerializedName("challengerUsername")
+	private String challengerUsername;
+
+	@SerializedName("chalengeeUsername")
+	private String challengeeUsername;
+
+	@SerializedName("message")
+	private String message;
+
 	/*
 	 * The accessor methods
 	 */
@@ -78,6 +87,27 @@ public class RequestWrapper {
 	 */
 	public int getCol() {
 		return col;
+	}
+
+	/**
+	 * @return the challengerUsername
+	 */
+	public String getChallengerUsername() {
+		return challengerUsername;
+	}
+
+	/**
+	 * @return the challengeeUsername
+	 */
+	public String getChallengeeUsername() {
+		return challengeeUsername;
+	}
+
+	/**
+	 * @return the message
+	 */
+	public String getMessage() {
+		return message;
 	}
 
 }

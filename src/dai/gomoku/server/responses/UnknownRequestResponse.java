@@ -1,5 +1,9 @@
 package dai.gomoku.server.responses;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.Socket;
+
 import dai.gomoku.server.Response;
 
 public class UnknownRequestResponse implements Response {
@@ -8,12 +12,6 @@ public class UnknownRequestResponse implements Response {
 
 	public UnknownRequestResponse(String requestMade) {
 		this.requestMade = requestMade;
-	}
-
-	@Override
-	public String toXMLString() {
-		// TODO: Generate appropriate XML String
-		return null;
 	}
 
 	@Override
@@ -33,6 +31,17 @@ public class UnknownRequestResponse implements Response {
 	public String toString() {
 		return "UnknownRequestResponse [type=" + type + ", requestMade="
 				+ requestMade + "]";
+	}
+
+	@Override
+	public void respond(Socket socket) {
+		try {
+			PrintWriter writer = new PrintWriter( socket.getOutputStream() );
+			writer.write("\n[STARTJSON]\n" + toJSONString() + "\n[ENDJSON]\n");
+			writer.flush();
+		} catch ( IOException ioe ) {
+			ioe.printStackTrace();
+		}
 	}
 
 }

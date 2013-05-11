@@ -1,8 +1,12 @@
 package dai.gomoku.server.requests;
 
+import dai.gomoku.game.core.CellOwnershipException;
+import dai.gomoku.game.core.GomokuGame;
+import dai.gomoku.game.core.Player;
 import dai.gomoku.server.Request;
 import dai.gomoku.server.Response;
 import dai.gomoku.server.responses.MakeMoveResponse;
+import dai.gomoku.server.responses.ResponseUtil;
 
 public class MakeMoveRequest implements Request {
 	private String type = "MAKEMOVE";
@@ -87,8 +91,15 @@ public class MakeMoveRequest implements Request {
 
 	@Override
 	public Response process() {
-		// TODO: Implement this correctly...
-		return new MakeMoveResponse(MakeMoveResponse.FAIL, gameID, username, row, col);
+		Player player = ResponseUtil.getPlayer(username);
+		GomokuGame game = ResponseUtil.getGameByID( player, gameID );
+		try {
+			game.markCell(player, row, col);
+			return new MakeMoveResponse(MakeMoveResponse.OK, gameID, username, row, col);
+		} catch (CellOwnershipException e) {
+			return new MakeMoveResponse(MakeMoveResponse.FAIL, gameID, username, row, col);
+		}
+		
 	}
 
 	/*

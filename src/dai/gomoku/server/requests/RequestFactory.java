@@ -52,7 +52,8 @@ public class RequestFactory {
 	 *         case, an object of the {@link LoginRequest} class
 	 */
 	public static Request buildLoginRequestFromWrapper(RequestWrapper wrapper, JSONRequestHandler parent) {
-		return new LoginRequest(wrapper.getUsername(), wrapper.getPassword(), parent.getClientSocket());
+		LoginRequest someRequest = new LoginRequest(wrapper.getUsername(), wrapper.getPassword(), parent);
+		return someRequest;
 	}
 
 	public static Request buildMakeMoveRequestFromWrapper(RequestWrapper wrapper) {

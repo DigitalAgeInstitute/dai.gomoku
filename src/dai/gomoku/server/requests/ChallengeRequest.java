@@ -1,19 +1,22 @@
 package dai.gomoku.server.requests;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.Socket;
+
+import dai.gomoku.server.AvailablePlayersList;
 import dai.gomoku.server.Request;
 import dai.gomoku.server.Response;
 
 public class ChallengeRequest implements Request {
+	public static final String MAKE = "MAKE";
+	public static final String ACCEPT = "ACCEPT";
+	public static final String REJECT = "REJECT";
+
 	private String type = "CHALLENGE";
 	private String challengerUsername;
-	private String opponentUsername;
-
-	/**
-	 * @return the type
-	 */
-	public String getType() {
-		return type;
-	}
+	private String challengeeUsername;
+	private String message;
 
 	/**
 	 * @return the challengerUsername
@@ -31,26 +34,51 @@ public class ChallengeRequest implements Request {
 	}
 
 	/**
-	 * @return the opponentUsername
+	 * @return the challengeeUsername
 	 */
-	public String getOpponentUsername() {
-		return opponentUsername;
+	public String getChallengeeUsername() {
+		return challengeeUsername;
 	}
 
 	/**
-	 * @param opponentUsername
-	 *            the opponentUsername to set
+	 * @param challengeeUsername
+	 *            the challengeeUsername to set
 	 */
-	public void setOpponentUsername(String opponentUsername) {
-		this.opponentUsername = opponentUsername;
+	public void setChallengeeUsername(String challengeeUsername) {
+		this.challengeeUsername = challengeeUsername;
+	}
+
+	/**
+	 * @return the message
+	 */
+	public String getMessage() {
+		return message;
+	}
+
+	/**
+	 * @param message
+	 *            the message to set
+	 */
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	/**
+	 * @return the type
+	 */
+	public String getType() {
+		return type;
 	}
 
 	@Override
 	public Response process() {
-		// TODO: Send the challenge to the opponent and then set a status awaiting a response.
+		// TODO: Send the challenge to the opponent and then set a status
+		// awaiting a response.
+		
 		// TODO: Read the response from the opponent
 		// TODO: If accepted, send accept, otherwise send refuse
 		return null;
 	}
+
 
 }

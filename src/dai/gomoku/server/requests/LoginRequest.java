@@ -1,11 +1,11 @@
 package dai.gomoku.server.requests;
 
-import java.net.Socket;
 import java.sql.SQLException;
 
 import dai.gomoku.game.core.Player;
 import dai.gomoku.server.AvailablePlayersList;
 import dai.gomoku.server.DBUtils;
+import dai.gomoku.server.JSONRequestHandler;
 import dai.gomoku.server.Request;
 import dai.gomoku.server.Response;
 import dai.gomoku.server.responses.LoginResponse;
@@ -14,13 +14,13 @@ public class LoginRequest implements Request {
 	private String type = "LOGIN";
 	private String username;
 	private String password;
-	private Socket connectionSocket;
+	private JSONRequestHandler playerThread;
 
 	public LoginRequest(String username, String password,
-			Socket connectionSocket) {
+			JSONRequestHandler playerThread) {
 		this.username = username;
 		this.password = password;
-		this.connectionSocket = connectionSocket;
+		this.playerThread = playerThread;
 	}
 
 	/**
@@ -69,18 +69,11 @@ public class LoginRequest implements Request {
 	}
 
 	/**
-	 * @return the connectionSocket
-	 */
-	public Socket getConnectionSocket() {
-		return connectionSocket;
-	}
-
-	/**
 	 * @param connectionSocket
 	 *            the connectionSocket to set
 	 */
-	public void setConnectionSocket(Socket connectionSocket) {
-		this.connectionSocket = connectionSocket;
+	public void setConnectionSocket(JSONRequestHandler playerThread) {
+		this.playerThread = playerThread;
 	}
 
 	/**
@@ -96,7 +89,7 @@ public class LoginRequest implements Request {
 				// to
 				// list of available players
 				Player player = DBUtils.createPlayer(username);
-				player.setConnectedOn(connectionSocket);
+				player.setPlayerThread(this.playerThread);
 				AvailablePlayersList.getInstance().addPlayerToList(player);
 
 				// TODO: Return a response indicating success of the

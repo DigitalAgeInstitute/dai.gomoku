@@ -1,6 +1,8 @@
 package dai.gomoku.server;
 
+import java.net.Socket;
+
 public interface Response {
-	String toXMLString();
+	void respond ( Socket socket );
 	String toJSONString();
 }

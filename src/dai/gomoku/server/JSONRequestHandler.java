@@ -5,21 +5,30 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.google.gson.Gson;
 
+import dai.gomoku.game.core.GameWinListener;
+import dai.gomoku.game.core.GomokuGame;
+import dai.gomoku.game.core.Player;
 import dai.gomoku.server.requests.RequestFactory;
 import dai.gomoku.server.requests.RequestWrapper;
+import dai.gomoku.server.responses.GameOverResponse;
+import dai.gomoku.server.responses.ResponseUtil;
 
-public class JSONRequestHandler implements Runnable {
+public class JSONRequestHandler implements Runnable, GameWinListener {
 	private Socket clientSocket;
 	private InputStream inputFromClient;
 	private OutputStream outputToClient;
 
+	private Map<String, GomokuGame> games;
+
 	public JSONRequestHandler(Socket clientSocket) throws IOException {
 		this.clientSocket = clientSocket;
+		games = new HashMap<String, GomokuGame>();
 		initIO();
 	}
 
@@ -36,6 +45,30 @@ public class JSONRequestHandler implements Runnable {
 	 */
 	public void setClientSocket(Socket clientSocket) {
 		this.clientSocket = clientSocket;
+	}
+
+	public void addGame(String gameID, GomokuGame game) {
+		this.games.put(gameID, game);
+	}
+
+	public void removeGame(String gameID) {
+		if (this.games.keySet().contains(gameID)) {
+			this.games.remove(gameID);
+		}
+	}
+
+	public GomokuGame getGameByID(String gameID) {
+		return this.games.get(gameID);
+	}
+
+	@Override
+	public void gameIsOver(GomokuGame game) {
+		Player winner = game.getWinner();
+		Player loser = game.getLoser();
+		GameOverResponse response = new GameOverResponse(game.getGameID(),
+				winner.getUserName(), loser.getUserName());
+		response.respond(ResponseUtil.getPlayerSocket(winner.getUserName()));
+		response.respond(ResponseUtil.getPlayerSocket(loser.getUserName()));
 	}
 
 	@Override
@@ -69,7 +102,7 @@ public class JSONRequestHandler implements Runnable {
 
 						// TODO: (synchronized)Send the response to the
 						// client
-						// sendResponse( response );
+						response.respond(clientSocket);
 					}
 				}
 
@@ -80,16 +113,9 @@ public class JSONRequestHandler implements Runnable {
 		} catch (NullPointerException npe) {
 			npe.printStackTrace();
 		}
-		
+
 		releaseResources();
 
-	}
-
-	private void sendResponse(Response response) {
-		String responseJson = "\n[STARTJSON]\n" + response.toJSONString()
-				+ "\n[ENDJSON]\n";
-		PrintWriter writer = new PrintWriter(outputToClient);
-		writer.write(responseJson);
 	}
 
 	private void initIO() throws IOException {

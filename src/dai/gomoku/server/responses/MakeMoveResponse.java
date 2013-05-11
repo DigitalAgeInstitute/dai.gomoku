@@ -1,5 +1,9 @@
 package dai.gomoku.server.responses;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.Socket;
+
 import dai.gomoku.server.Response;
 
 public class MakeMoveResponse implements Response {
@@ -98,12 +102,6 @@ public class MakeMoveResponse implements Response {
 	}
 
 	@Override
-	public String toXMLString() {
-		// TODO Generate appropriate XML
-		return null;
-	}
-
-	@Override
 	public String toJSONString() {
 		return String
 				.format("{ \"type\":\"%s\", \"status\":\"%s\", \"gameID\":\"%s\", \"username\":\"%s\", \"row\":%d, \"col\":%d }",
@@ -120,6 +118,17 @@ public class MakeMoveResponse implements Response {
 		return "MakeMoveResponse [type=" + type + ", status=" + status
 				+ ", gameID=" + gameID + ", username=" + username + ", row="
 				+ row + ", col=" + col + "]";
+	}
+
+	@Override
+	public synchronized void respond(Socket socket) {
+		try {
+			PrintWriter writer = new PrintWriter( socket.getOutputStream() );
+			writer.write( "\n[STARTJSON]\n" + toJSONString() + "\n[ENDJSON]\n" );
+			writer.flush();
+		} catch ( IOException ioe ) {
+			ioe.printStackTrace();
+		}
 	}
 
 }

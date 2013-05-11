@@ -1,6 +1,6 @@
 package dai.gomoku.game.core;
 
-import java.net.Socket;
+import dai.gomoku.server.JSONRequestHandler;
 
 public class HumanPlayer implements Player {
 	private String userID;
@@ -8,9 +8,9 @@ public class HumanPlayer implements Player {
 	private String firstName;
 	private String lastName;
 	private String email;
-	private int contacts;
+	private String contacts;
 
-	private Socket connectedOn;
+	private JSONRequestHandler playerThread;
 
 	public HumanPlayer(String userID, String userName, String firstName,
 			String lastName) {
@@ -37,21 +37,18 @@ public class HumanPlayer implements Player {
 	}
 
 	/**
-	 * 
-	 * @return the Socket by which the player is connected to the server on
+	 * @return the playerThread
 	 */
-	@Override
-	public Socket getConnectedOn() {
-		return connectedOn;
+	public JSONRequestHandler getPlayerThread() {
+		return playerThread;
 	}
 
-	@Override
 	/**
-	 * @param connectedOn
-	 *            the Socket to set, by which the player is connected on to the server
+	 * @param playerThread
+	 *            the playerThread to set
 	 */
-	public void setConnectedOn(Socket connectedOn) {
-		this.connectedOn = connectedOn;
+	public void setPlayerThread(JSONRequestHandler playerThread) {
+		this.playerThread = playerThread;
 	}
 
 	/**
@@ -117,7 +114,7 @@ public class HumanPlayer implements Player {
 	/**
 	 * @return the contacts
 	 */
-	public int getContacts() {
+	public String getContacts() {
 		return contacts;
 	}
 
@@ -125,7 +122,7 @@ public class HumanPlayer implements Player {
 	 * @param contacts
 	 *            the contacts to set
 	 */
-	public void setContacts(int contacts) {
+	public void setContacts(String contacts) {
 		this.contacts = contacts;
 	}
 
@@ -142,8 +139,7 @@ public class HumanPlayer implements Player {
 				+ ((firstName == null) ? 0 : firstName.hashCode());
 		result = prime * result
 				+ ((lastName == null) ? 0 : lastName.hashCode());
-		result = prime * result
-				+ ((userID == null) ? 0 : userID.hashCode());
+		result = prime * result + ((userID == null) ? 0 : userID.hashCode());
 		result = prime * result
 				+ ((userName == null) ? 0 : userName.hashCode());
 		return result;
@@ -195,6 +191,13 @@ public class HumanPlayer implements Player {
 	public String toString() {
 		return "HumanPlayer [playerID=" + userID + ", userName=" + userName
 				+ ", firstName=" + firstName + ", lastName=" + lastName + "]";
+	}
+
+	@Override
+	public String toJSONString() {
+		return "{\"playerID\":\"" + userID + "\", \"userName\":\"" + userName
+				+ "\", \"firstName\":\"" + firstName + "\", \"lastName\":\""
+				+ lastName + "\"}";
 	}
 
 }
