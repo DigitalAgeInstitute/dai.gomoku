@@ -10,12 +10,10 @@ public class GameOverResponse implements Response {
 	private final String type = "GAMEOVER";
 	private String gameID;
 	private String winner;
-	private String loser;
 
-	public GameOverResponse(String gameID, String winner, String loser) {
+	public GameOverResponse(String gameID, String winner) {
 		this.gameID = gameID;
 		this.winner = winner;
-		this.loser = loser;
 	}
 
 	@Override

@@ -66,7 +66,7 @@ public class JSONRequestHandler implements Runnable, GameWinListener {
 		Player winner = game.getWinner();
 		Player loser = game.getLoser();
 		GameOverResponse response = new GameOverResponse(game.getGameID(),
-				winner.getUserName(), loser.getUserName());
+				winner.getUserName());
 		response.respond(ResponseUtil.getPlayerSocket(winner.getUserName()));
 		response.respond(ResponseUtil.getPlayerSocket(loser.getUserName()));
 	}
