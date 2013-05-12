@@ -10,7 +10,7 @@ public class MakeMoveResponse implements Response {
 	public static final String OK = "OK";
 	public static final String FAIL = "FAIL";
 
-	private String type = "MAKEMOVERESPONSE";
+	private String type = "MAKEMOVE";
 	private String status;
 	private String gameID;
 	private String username;

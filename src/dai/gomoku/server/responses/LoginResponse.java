@@ -10,7 +10,7 @@ public class LoginResponse implements Response {
 	public static final String OK = "OK";
 	public static final String FAIL = "FAIL";
 	
-	private String type = "LOGINRESPONSE";
+	private String type = "LOGIN";
 	private String state = "";
 
 	public LoginResponse ( String state ) {

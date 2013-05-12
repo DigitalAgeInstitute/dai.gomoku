@@ -1,8 +1,8 @@
-package dai.gomoku.client.swing;
+package dai.gomoku.client.swing.responses;
 
 import com.google.gson.annotations.SerializedName;
 
-public class ResponseParser {
+public class ResponseWrapper {
 	@SerializedName("type")
 	private String type;
 

@@ -1,24 +1,27 @@
 package dai.gomoku.client.swing;
 
-import java.io.*;
-import java.net.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import com.google.gson.Gson;
 
-import dai.gomoku.server.Request;
-import dai.gomoku.server.Response;
-import dai.gomoku.server.requests.RequestFactory;
-import dai.gomoku.server.requests.RequestWrapper;
+import dai.gomoku.client.swing.responses.Response;
+import dai.gomoku.client.swing.responses.ResponseFactory;
+import dai.gomoku.client.swing.responses.ResponseWrapper;
 
-public class Responses implements Runnable {
+public class ResponseHandler implements Runnable {
 	private InputStream inputFromServer;
-	public Responses(InputStream inputFromServer) {
+
+	public ResponseHandler(InputStream inputFromServer) {
 		this.inputFromServer = inputFromServer;
 	}
 
 	@Override
 	public void run() {
-		BufferedReader reader = new BufferedReader(new InputStreamReader(inputFromServer));
+		BufferedReader reader = new BufferedReader(new InputStreamReader(
+				inputFromServer));
 		String inputLine;
 		try {
 			while ((inputLine = reader.readLine()) != null) {
@@ -32,9 +35,11 @@ public class Responses implements Runnable {
 						}
 						// TODO: Parse the JSON
 						Gson gson = new Gson();
-						ResponseParser parseResponses = gson.fromJson(
-								completeInput, ResponseParser.class);
-
+						ResponseWrapper wrapper = gson.fromJson(completeInput,
+								ResponseWrapper.class);
+						Response response = ResponseFactory
+								.buildResponseFromWrapper(wrapper);
+						response.process();
 					}
 				}
 

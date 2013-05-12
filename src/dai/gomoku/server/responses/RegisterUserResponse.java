@@ -10,7 +10,7 @@ public class RegisterUserResponse implements Response {
 	public static final String OK = "OK";
 	public static final String FAIL = "FAIL";
 
-	private final String type = "REGISTERUSERRESPONSE";
+	private final String type = "REGISTERUSER";
 	private String status;
 	private String message;
 

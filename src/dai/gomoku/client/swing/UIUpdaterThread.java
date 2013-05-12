@@ -1,13 +1,14 @@
 package dai.gomoku.client.swing;
 
-import java.util.Properties;
+import dai.gomoku.client.swing.responses.ResponseWrapper;
+
 
 
 public class UIUpdaterThread implements Runnable {
-	ResponseParser parser = new ResponseParser();
+	ResponseWrapper parser = new ResponseWrapper();
 	static boolean loginStatus = false, signUpStatus = false;
 	static String move = "";
-	public static void intepretRespose(ResponseParser parser) {
+	public static void intepretRespose(ResponseWrapper parser) {
 		switch (parser.getType()) {
 		case "SIGNUPRESPONSE":
 			signUpStatus = signUpUser(parser);
@@ -22,22 +23,22 @@ public class UIUpdaterThread implements Runnable {
 		}
 	}
 
-	public static boolean loginUser(ResponseParser parser) {
+	public static boolean loginUser(ResponseWrapper parser) {
 		return parser.getStatus().equalsIgnoreCase("OK");
 	}
 	
-	public static String makeMove(ResponseParser parser) {
+	public static String makeMove(ResponseWrapper parser) {
 		if(parser.getStatus().equalsIgnoreCase("OK")) {
 			move = parser.getUsername() + ":" + parser.getRow() + " , " + parser.getCol();
 		}
 		return move;
 	}
 	
-	public static boolean signUpUser(ResponseParser parser) {
+	public static boolean signUpUser(ResponseWrapper parser) {
 		return parser.getStatus().equalsIgnoreCase("OK");
 	}
 
-	public static void logoutUser(ResponseParser parser) {
+	public static void logoutUser(ResponseWrapper parser) {
 		if(parser.getStatus().equalsIgnoreCase("OK")) {
 			new Connection().closeConnection();
 		}
