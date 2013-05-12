@@ -1,30 +1,13 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package dai.gomoku.client.swing;
 
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.*;
 import java.util.List;
 
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
+import javax.swing.*;
+import javax.swing.event.*;
 
 /**
  *
@@ -32,10 +15,9 @@ import javax.swing.JPanel;
  */
 public class GomokuGUI extends javax.swing.JFrame {
 
-
-	JButton[][] buttonArray = new JButton[16][16];
 	int count = 0;
 	VirtualBoard vb = new VirtualBoard();
+	GameWindow window = new GameWindow();
 	List<Integer> xList;
 	List<Integer> oList;
 	List<Object> names;
@@ -48,7 +30,9 @@ public class GomokuGUI extends javax.swing.JFrame {
 	
     public GomokuGUI() {
         initComponents();
-        createFrame();
+        setTitle("Gomoku");
+        position(this);
+        //createFrame();
     }
 
     
@@ -63,11 +47,10 @@ public class GomokuGUI extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         searchTxt = new javax.swing.JTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
-        usersTable = new javax.swing.JTable();
         challengeButton = new javax.swing.JButton();
-        jMenuBar2 = new javax.swing.JMenuBar();
-        jMenu3 = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        menuBar = new javax.swing.JMenuBar();
+        menu = new javax.swing.JMenu();
+        newMenuItem = new javax.swing.JMenuItem();
         usersList = new JList();
 
         names = Arrays.asList(players);
@@ -125,9 +108,8 @@ public class GomokuGUI extends javax.swing.JFrame {
 			
 			@Override
 			public void keyTyped(KeyEvent e) {
-				userTxtKeyTyped(e);
+				searchTxtKeyTyped(e);
 			}
-			
 			@Override
 			public void keyReleased(KeyEvent arg0) {
 				// TODO Auto-generated method stub
@@ -140,18 +122,6 @@ public class GomokuGUI extends javax.swing.JFrame {
 				
 			}
 		});
-
-        usersTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null},
-                {null},
-                {null},
-                {null}
-            },
-            new String [] {
-                "Title 1"
-            }
-        ));
         jScrollPane2.setViewportView(usersList);
 
         challengeButton.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
@@ -160,8 +130,7 @@ public class GomokuGUI extends javax.swing.JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				GameWindow.title = "Game VS "+usersList.getSelectedValue().toString(); 
-				createFrame();
+				createFrame("Game VS " + usersList.getSelectedValue().toString());
 			}
 		});
 
@@ -191,20 +160,20 @@ public class GomokuGUI extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jMenu3.setText("File");
+        menu.setText("File");
 
-        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.ALT_MASK));
-        jMenuItem1.setText("New");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        newMenuItem.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.ALT_MASK));
+        newMenuItem.setText("New");
+        newMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                newMenuItemActionPerformed(evt);
             }
         });
-        jMenu3.add(jMenuItem1);
+        menu.add(newMenuItem);
 
-        jMenuBar2.add(jMenu3);
+        menuBar.add(menu);
 
-        setJMenuBar(jMenuBar2);
+        setJMenuBar(menuBar);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -225,8 +194,8 @@ public class GomokuGUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {                                           
-        
+    private void newMenuItemActionPerformed(java.awt.event.ActionEvent evt) {                                           
+        window.buttonArray[0][1].setBackground(Color.black);
     }   
     
     final char [] alphaNumeric = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
@@ -234,7 +203,7 @@ public class GomokuGUI extends javax.swing.JFrame {
     		'/','"','!','@','#','$','%','*','&','^','(',')','`','~',',','.',
     		'0','1','2','3','4','5','6','7','8','9',' '};
     
-    private void userTxtKeyTyped(KeyEvent e) {
+    private void searchTxtKeyTyped(KeyEvent e) {
 		StringBuffer search = new StringBuffer();
 		List<String> l;
 		for(int i = 0; i < alphaNumeric.length; i++) {
@@ -285,58 +254,229 @@ public class GomokuGUI extends javax.swing.JFrame {
             searchTxt.setForeground(Color.BLACK);
         }
     }
+    /**
+    *
+    * Creates a game window for each game
+    */
     
-    protected void createFrame() {
+    protected void createFrame(String title) {
 		GameWindow frame = new GameWindow();
+		frame.setTitle(title);
 		frame.setVisible(true);
 		desktop.add(frame);
-		statusLabel = new JLabel("This is a JLabel for error and status messages");
+		
 		statusLabel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 153, 153)));
         statusLabel.setBounds(10, 600, 610, 30);
         statusLabel.setHorizontalAlignment(JLabel.TRAILING);
-        desktop.add(statusLabel, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        if (openFrameCount == 1) {
+			desktop.add(statusLabel, javax.swing.JLayeredPane.DEFAULT_LAYER);
+			reconnectButton.addMouseListener(new MouseListener() {
 
-        reconnectButton = new JButton("Reconnect");
-        reconnectButton.addMouseListener(new MouseListener() {
-			
-			@Override
-			public void mouseReleased(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void mousePressed(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void mouseExited(MouseEvent arg0) {
-				reconnectButton.setText("<html><body style = \"text-decoration:none;\">Reconnect</body></html>");
-			}
-			
-			@Override
-			public void mouseEntered(MouseEvent arg0) {
-				reconnectButton.setText("<html><body style = \"text-decoration:underline;\">Reconnect</body></html>");
-			}
-			
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-		});
-        reconnectButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        reconnectButton.setForeground(Color.BLUE);
-        reconnectButton.setBorderPainted(false);
-        reconnectButton.setContentAreaFilled(false);
-        reconnectButton.setBounds(620, 600, 140, 30);
-        desktop.add(reconnectButton, javax.swing.JLayeredPane.DEFAULT_LAYER);
+				@Override
+				public void mouseReleased(MouseEvent arg0) {
+					// TODO Auto-generated method stub
+
+				}
+
+				@Override
+				public void mousePressed(MouseEvent arg0) {
+					// TODO Auto-generated method stub
+
+				}
+
+				@Override
+				public void mouseExited(MouseEvent arg0) {
+					reconnectButton
+							.setText("<html><body style = \"text-decoration:none;\">Reconnect</body></html>");
+				}
+
+				@Override
+				public void mouseEntered(MouseEvent arg0) {
+					reconnectButton
+							.setText("<html><body style = \"text-decoration:underline;\">Reconnect</body></html>");
+				}
+
+				@Override
+				public void mouseClicked(MouseEvent arg0) {
+					// TODO Auto-generated method stub
+
+				}
+			});
+			reconnectButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+			reconnectButton.setForeground(Color.BLUE);
+			reconnectButton.setBorderPainted(false);
+			reconnectButton.setContentAreaFilled(false);
+			reconnectButton.setBounds(620, 600, 140, 30);
+			desktop.add(reconnectButton, javax.swing.JLayeredPane.DEFAULT_LAYER);
+		}
 		try {
 			frame.setSelected(true);
 		} catch (java.beans.PropertyVetoException e) {}
 	}
+
+/**
+ *
+ * Sets the position of the window
+ */
+    public static void position( Window window ) {
+
+        // Get the size of the screen
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+
+        // Determine the new location of the window
+        int w = window.getSize().width;
+        int h = window.getSize().height;
+        int x = (dim.width - w) / 5;
+        // Move the window
+        window.setLocation(x, 0);
+    }
+    
+    int openFrameCount = 0;
+    class GameWindow extends JInternalFrame {
+    	static final int xOffset = 10, yOffset = 10;
+
+    	JPanel boardPanel;
+    	JButton[][] buttonArray = new JButton[15][15];
+    	int count = 0;
+    	VirtualBoard vb = new VirtualBoard();
+    	FindWinner winner = new FindWinner();
+    	Requests requests = new Requests();
+    	List<Integer> xList;
+    	List<Integer> oList;
+    	HashSet<List<Integer>> xxSet = new HashSet<List<Integer>>();
+    	HashSet<List<Integer>> ooSet = new HashSet<List<Integer>>();
+
+    	public GameWindow() {
+    		super();
+    		setResizable(true);
+    		setIconifiable(true);
+    		setMaximizable(false);
+    		setClosable(true);
+    		addInternalFrameListener(new InternalFrameListener() {
+                public void internalFrameActivated(InternalFrameEvent evt) {
+                }
+                public void internalFrameDeactivated(InternalFrameEvent evt) {
+                }
+                public void internalFrameDeiconified(InternalFrameEvent evt) {
+                }
+                public void internalFrameIconified(InternalFrameEvent evt) {
+                }
+                public void internalFrameClosed(InternalFrameEvent evt) {
+                }
+                public void internalFrameClosing(InternalFrameEvent evt) {
+                    gameWindowClosing(evt);
+                }
+                public void internalFrameOpened(InternalFrameEvent evt) {
+                }
+            });
+
+    		
+    		createBoardPanel();
+
+    		setPreferredSize(new Dimension(650, 650));
+
+            boardPanel.setPreferredSize(new Dimension(500, 500));
+
+            javax.swing.GroupLayout jInternalFrame1Layout = new javax.swing.GroupLayout(getContentPane());
+            getContentPane().setLayout(jInternalFrame1Layout);
+            jInternalFrame1Layout.setHorizontalGroup(
+                jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jInternalFrame1Layout.createSequentialGroup()
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(boardPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 584, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(26, 26, 26))
+            );
+            jInternalFrame1Layout.setVerticalGroup(
+                jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jInternalFrame1Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(boardPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 548, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(12, Short.MAX_VALUE))
+            );
+
+            setBounds(0, 0, 610, 600);
+            setVisible(true);
+    	
+    		setSize(610, 590);
+            //setPreferredSize(new Dimension(650, 650));
+    		openFrameCount++;
+    		setLocation(xOffset * openFrameCount, yOffset);
+    		
+    	}
+    	HintsImplementation hints = new HintsImplementation();
+
+/**
+ *
+ * Create the game board
+ */
+    	void createBoardPanel() {
+    		boardPanel = new JPanel(new GridLayout(15, 15));
+    		for (int x = 0; x < buttonArray.length; x++) {
+    			for (int i = 0; i < buttonArray[x].length; i++) {
+    				final int a = x, b = i;
+    				buttonArray[x][i] = new JButton();//x+", "+i
+    				if (x % 2 == 0 && i % 2 == 0 || x % 2 == 1 && i % 2 == 1) {
+    					buttonArray[x][i].setBackground(new Color(240,240,240));
+    				}
+    				else {
+    					buttonArray[x][i].setBackground(Color.white);
+    				}
+    				buttonArray[x][i].addActionListener(new ActionListener() {
+    					
+    					@Override
+    					public void actionPerformed(ActionEvent e) {
+    						count++;
+    						if (count % 2 == 0) {	
+    							//requests.sendRequests(requests.generateMoveRequest("12hjg265", "x", a, b));
+    							oList = new ArrayList<Integer>();
+    							oList.add(a);
+    							oList.add(b);
+    							if(vb.occupiedCells.add(oList)) {
+    								((JButton) e.getSource()).setIcon(new ImageIcon("F:\\projects\\dai.gomoku\\src\\dai\\gomoku\\client\\swing\\o.PNG"));
+    								vb.board[a][b] = 'O';
+    								if(winner.hasSomeOneWon(vb.board) == 'O') {
+    									statusLabel.setText("O is the winner!");
+    								}
+    								for(String s : hints.generateHint(vb.board, 'O')) {
+    									buttonArray[Integer.parseInt(s.split(",")[0])][Integer.parseInt(s.split(",")[1])].setBackground(Color.RED);
+    								}
+    							}
+    							else {
+    								count--;
+    							}
+    						}
+    						else {	
+    							//requests.sendRequests(requests.generateMoveRequest("12hjg265", "o", a, b));
+    							xList = new ArrayList<Integer>();
+    							xList.add(a);
+    							xList.add(b);
+    							if(vb.occupiedCells.add(xList)) {
+    								((JButton) e.getSource()).setIcon(new ImageIcon("F:\\projects\\dai.gomoku\\src\\dai\\gomoku\\client\\swing\\x.PNG"));
+    								vb.board[a][b] = 'X';
+    								if(winner.hasSomeOneWon(vb.board) == 'X') {
+    									statusLabel.setText("X is the winner!");
+    								}
+    							}
+    							else {
+    								count--;
+    							}
+    						}
+    					}
+    				});
+    			boardPanel.add(buttonArray[x][i]);
+    			}
+    		}
+    	}
+
+/**
+ *
+ * This is to capture the event of a game being abandoned by a player
+ */
+    	private void gameWindowClosing(InternalFrameEvent evt) {
+    		System.out.println("closed");
+    	}
+    }
+
     
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -345,21 +485,21 @@ public class GomokuGUI extends javax.swing.JFrame {
             }
         });
     }
+    
     // Variables declaration - do not modify
-    private javax.swing.JButton challengeButton, reconnectButton;
-    JLabel statusLabel;
+    private javax.swing.JButton challengeButton, reconnectButton = new JButton("Reconnect");
+    JLabel statusLabel = new JLabel("This is a JLabel for error and status messages");
     private javax.swing.JDesktopPane desktop;
     private javax.swing.JInternalFrame internalFrame;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenu jMenu3;
+    private javax.swing.JMenu menu;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuBar jMenuBar2;
-    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuBar menuBar;
+    private javax.swing.JMenuItem newMenuItem;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel boardPanel;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextField searchTxt;
-    private javax.swing.JTable usersTable;
     // End of variables declaration
 }

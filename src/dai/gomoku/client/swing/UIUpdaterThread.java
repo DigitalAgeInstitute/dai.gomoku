@@ -4,6 +4,7 @@ import java.util.Properties;
 
 
 public class UIUpdaterThread implements Runnable {
+	ResponseParser parser = new ResponseParser();
 	static boolean loginStatus = false, signUpStatus = false;
 	static String move = "";
 	public static void intepretRespose(ResponseParser parser) {
@@ -45,6 +46,6 @@ public class UIUpdaterThread implements Runnable {
 
 	@Override
 	public void run() {
-		
+		intepretRespose(parser);
 	}
 }

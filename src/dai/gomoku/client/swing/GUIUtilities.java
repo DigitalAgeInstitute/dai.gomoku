@@ -14,7 +14,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 
-public class Factory {
+public class GUIUtilities {
 	public static JMenu setJMenu(JMenu menu) {
 		menu.setFont(new Font("Dialog", Font.BOLD, 12));
 		menu.setCursor(new Cursor(Cursor.HAND_CURSOR));

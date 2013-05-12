@@ -1,4 +1,4 @@
-package dai.gomoku.client.swing;
+/*package dai.gomoku.client.swing;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -45,7 +45,7 @@ public class GameWindow extends JInternalFrame {
             public void internalFrameClosed(InternalFrameEvent evt) {
             }
             public void internalFrameClosing(InternalFrameEvent evt) {
-                internalFrameInternalFrameClosing(evt);
+                gameWindowClosing(evt);
             }
             public void internalFrameOpened(InternalFrameEvent evt) {
             }
@@ -84,7 +84,7 @@ public class GameWindow extends JInternalFrame {
 		setLocation(xOffset * openFrameCount, yOffset);
 		
 	}
-	
+	HintsImplementation hints = new HintsImplementation();
 	void createBoardPanel() {
 		boardPanel = new JPanel(new GridLayout(15, 15));
 		for (int x = 0; x < buttonArray.length; x++) {
@@ -103,7 +103,7 @@ public class GameWindow extends JInternalFrame {
 					public void actionPerformed(ActionEvent e) {
 						count++;
 						if (count % 2 == 0) {	
-							requests.sendRequests(requests.generateMoveRequest("12hjg265", "x", a, b));
+							//requests.sendRequests(requests.generateMoveRequest("12hjg265", "x", a, b));
 							oList = new ArrayList<Integer>();
 							oList.add(a);
 							oList.add(b);
@@ -113,13 +113,16 @@ public class GameWindow extends JInternalFrame {
 								if(winner.hasSomeOneWon(vb.board) == 'O') {
 									System.out.println("O is the winner!");
 								}
+								for(String s : hints.generateHint(vb.board, 'O')) {
+									buttonArray[Integer.parseInt(s.split(",")[0])][Integer.parseInt(s.split(",")[1])].setBackground(Color.RED);
+								}
 							}
 							else {
 								count--;
 							}
 						}
 						else {	
-							requests.sendRequests(requests.generateMoveRequest("12hjg265", "o", a, b));
+							//requests.sendRequests(requests.generateMoveRequest("12hjg265", "o", a, b));
 							xList = new ArrayList<Integer>();
 							xList.add(a);
 							xList.add(b);
@@ -140,7 +143,8 @@ public class GameWindow extends JInternalFrame {
 			}
 		}
 	}
-	private void internalFrameInternalFrameClosing(InternalFrameEvent evt) {
+	private void gameWindowClosing(InternalFrameEvent evt) {
 		System.out.println("closed");
 	}
 }
+*/

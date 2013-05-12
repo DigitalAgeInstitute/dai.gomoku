@@ -18,11 +18,8 @@ public class Responses implements Runnable {
 
 	@Override
 	public void run() {
-		BufferedReader reader = new BufferedReader(new InputStreamReader(
-				inputFromServer));
+		BufferedReader reader = new BufferedReader(new InputStreamReader(inputFromServer));
 		String inputLine;
-		
-
 		try {
 			while ((inputLine = reader.readLine()) != null) {
 				if (inputLine.equals("[STARTJSON]")) {

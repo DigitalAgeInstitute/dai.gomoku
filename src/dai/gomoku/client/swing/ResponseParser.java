@@ -20,11 +20,7 @@ public class ResponseParser {
 
 	@SerializedName("col")
 	private int col;
-
-	/*
-	 * The accessor methods
-	 */
-
+	
 	public String getType() {
 		return type;
 	}

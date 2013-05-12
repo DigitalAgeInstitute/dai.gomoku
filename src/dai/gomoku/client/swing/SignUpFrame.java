@@ -12,7 +12,7 @@ public class SignUpFrame extends JFrame {
 	
 	public SignUpFrame() {
 		createGUI();
-		Factory.center(this);
+		GUIUtilities.center(this);
 	}
 	
 	User user = new User();

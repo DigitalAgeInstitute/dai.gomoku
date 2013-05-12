@@ -22,7 +22,7 @@ public class GomokuLogin extends JFrame {
     public GomokuLogin() {
     	setTitle("Gomoku :: Login");
     	setResizable(false);
-    	Factory.center(this);
+    	GUIUtilities.center(this);
         initComponents();
     }
 
@@ -168,26 +168,8 @@ public class GomokuLogin extends JFrame {
                 .addComponent(forgotDetailsButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(69, Short.MAX_VALUE))
         );
-        
-        /*signUp.loginButton.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				Factory.switchPanels(card, panel, "login");
-				setTitle("Gomoku :: Login");
-			}
-		});
-        
-        signUp.cancelButton.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				System.exit(1);
-			}
-		});
-*/
+    
         panel.add(loginPanel, "login");
-        //panel.add(signUp.signUpPanel, "sign up");
 
         GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
