@@ -409,6 +409,7 @@ public class GomokuGUI extends javax.swing.JFrame {
  *
  * Create the game board
  */
+    	String separator = System.getProperty("file.separator");
     	void createBoardPanel() {
     		boardPanel = new JPanel(new GridLayout(15, 15));
     		for (int x = 0; x < buttonArray.length; x++) {
@@ -432,7 +433,8 @@ public class GomokuGUI extends javax.swing.JFrame {
     							oList.add(a);
     							oList.add(b);
     							if(vb.occupiedCells.add(oList)) {
-    								((JButton) e.getSource()).setIcon(new ImageIcon("F:\\projects\\dai.gomoku\\src\\dai\\gomoku\\client\\swing\\o.PNG"));
+    								System.out.println("dai"+separator+"gomoku"+separator+"client"+separator+"swing"+separator+"o.PNG");
+    								((JButton) e.getSource()).setIcon(new ImageIcon("images"+separator+"o.PNG"));
     								vb.board[a][b] = 'O';
     								if(winner.hasSomeOneWon(vb.board) == 'O') {
     									statusLabel.setText("O is the winner!");
@@ -451,7 +453,7 @@ public class GomokuGUI extends javax.swing.JFrame {
     							xList.add(a);
     							xList.add(b);
     							if(vb.occupiedCells.add(xList)) {
-    								((JButton) e.getSource()).setIcon(new ImageIcon("F:\\projects\\dai.gomoku\\src\\dai\\gomoku\\client\\swing\\x.PNG"));
+    								((JButton) e.getSource()).setIcon(new ImageIcon("images"+separator+"x.PNG"));
     								vb.board[a][b] = 'X';
     								if(winner.hasSomeOneWon(vb.board) == 'X') {
     									statusLabel.setText("X is the winner!");

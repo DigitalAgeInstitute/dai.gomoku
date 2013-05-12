@@ -35,8 +35,6 @@ public class Responses implements Runnable {
 						ResponseParser parseResponses = gson.fromJson(
 								completeInput, ResponseParser.class);
 
-						// TODO: Create appropriate Request object
-						
 					}
 				}
 
