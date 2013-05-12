@@ -7,7 +7,7 @@ import java.io.InputStreamReader;
 
 import com.google.gson.Gson;
 
-import dai.gomoku.client.swing.responses.Response;
+import dai.gomoku.client.Response;
 import dai.gomoku.client.swing.responses.ResponseFactory;
 import dai.gomoku.client.swing.responses.ResponseWrapper;
 

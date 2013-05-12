@@ -1,5 +1,7 @@
 package dai.gomoku.client.swing.responses;
 
+import dai.gomoku.client.Response;
+
 public class LoginResponse implements Response {
 	private String type = "LOGIN";
 	private String state;

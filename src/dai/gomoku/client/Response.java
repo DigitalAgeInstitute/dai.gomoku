@@ -1,4 +1,4 @@
-package dai.gomoku.client.swing.responses;
+package dai.gomoku.client;
 
 public interface Response {
 	void process ( );
