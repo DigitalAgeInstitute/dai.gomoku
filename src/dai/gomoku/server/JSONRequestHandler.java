@@ -87,6 +87,8 @@ public class JSONRequestHandler implements Runnable, GameWinListener {
 						} else {
 							completeInput += inputLine;
 						}
+						
+						System.out.println("RECEIVED: " + completeInput);
 						// TODO: Parse the JSON
 						Gson gson = new Gson();
 						RequestWrapper wrapper = gson.fromJson(completeInput,

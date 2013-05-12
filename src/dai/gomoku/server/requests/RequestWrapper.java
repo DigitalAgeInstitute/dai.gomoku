@@ -46,6 +46,18 @@ public class RequestWrapper {
 	@SerializedName("message")
 	private String message;
 
+	@SerializedName("firstName")
+	private String firstName;
+
+	@SerializedName("lastName")
+	private String lastName;
+
+	@SerializedName("email")
+	private String email;
+
+	@SerializedName("contacts")
+	private String contacts;
+
 	/*
 	 * The accessor methods
 	 */
@@ -108,6 +120,34 @@ public class RequestWrapper {
 	 */
 	public String getMessage() {
 		return message;
+	}
+
+	/**
+	 * @return the firstName
+	 */
+	public String getFirstName() {
+		return firstName;
+	}
+
+	/**
+	 * @return the lastName
+	 */
+	public String getLastName() {
+		return lastName;
+	}
+
+	/**
+	 * @return the email
+	 */
+	public String getEmail() {
+		return email;
+	}
+
+	/**
+	 * @return the contacts
+	 */
+	public String getContacts() {
+		return contacts;
 	}
 
 }

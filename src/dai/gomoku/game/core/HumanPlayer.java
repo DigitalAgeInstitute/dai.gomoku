@@ -14,7 +14,6 @@ public class HumanPlayer implements Player {
 
 	public HumanPlayer(String userID, String userName, String firstName,
 			String lastName) {
-		super();
 		this.userID = userID;
 		this.userName = userName;
 		this.firstName = firstName;

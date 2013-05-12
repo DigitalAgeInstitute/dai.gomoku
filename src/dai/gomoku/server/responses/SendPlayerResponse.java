@@ -48,4 +48,15 @@ public class SendPlayerResponse implements Response {
 		playersString += "] }\n[ENDJSON]\n";
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "SendPlayerResponse [type=" + type + ", players=" + players
+				+ "]";
+	}
+
 }

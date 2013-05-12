@@ -29,12 +29,15 @@ public class RequestFactory {
 	 * 
 	 * @return an object that implements the {@link Request} interface
 	 */
-	public static Request buildRequestFromWrapper(RequestWrapper wrapper, JSONRequestHandler parentThread) {
+	public static Request buildRequestFromWrapper(RequestWrapper wrapper,
+			JSONRequestHandler parentThread) {
 		switch (wrapper.getType()) {
 		case "LOGIN":
 			return buildLoginRequestFromWrapper(wrapper, parentThread);
 		case "MAKEMOVE":
 			return buildMakeMoveRequestFromWrapper(wrapper);
+		case "REGISTERUSER":
+			return buildRegisterUserRequestRequestFromWrapper(wrapper);
 		default:
 			return buildUnknownRequestFromWrapper(wrapper);
 		}
@@ -51,14 +54,23 @@ public class RequestFactory {
 	 * @return an object that implements the {@link Request} interface, in this
 	 *         case, an object of the {@link LoginRequest} class
 	 */
-	public static Request buildLoginRequestFromWrapper(RequestWrapper wrapper, JSONRequestHandler parent) {
-		LoginRequest someRequest = new LoginRequest(wrapper.getUsername(), wrapper.getPassword(), parent);
+	public static Request buildLoginRequestFromWrapper(RequestWrapper wrapper,
+			JSONRequestHandler parent) {
+		LoginRequest someRequest = new LoginRequest(wrapper.getUsername(),
+				wrapper.getPassword(), parent);
 		return someRequest;
 	}
 
 	public static Request buildMakeMoveRequestFromWrapper(RequestWrapper wrapper) {
 		return new MakeMoveRequest(wrapper.getGameID(), wrapper.getUsername(),
 				wrapper.getRow(), wrapper.getCol());
+	}
+
+	public static Request buildRegisterUserRequestRequestFromWrapper(
+			RequestWrapper wrapper) {
+		return new RegisterUserRequest(wrapper.getFirstName(),
+				wrapper.getLastName(), wrapper.getEmail(), wrapper.getEmail(),
+				wrapper.getPassword(), wrapper.getUsername());
 	}
 
 	/**
@@ -75,7 +87,7 @@ public class RequestFactory {
 	public static Request buildUnknownRequestFromWrapper(RequestWrapper wrapper) {
 		// TODO: Implement a method that creates a java.util.Properties object
 		// and uses it to create an UnknownRequestObject
-		return new UnknownRequest( wrapper.getType() );
+		return new UnknownRequest(wrapper.getType());
 	}
-	
+
 }

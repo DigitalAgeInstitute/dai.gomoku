@@ -6,14 +6,18 @@ import java.net.Socket;
 
 import dai.gomoku.server.Response;
 
-public class GameOverResponse implements Response {
-	private final String type = "GAMEOVER";
-	private String gameID;
-	private String winner;
+public class RegisterUserResponse implements Response {
+	public static final String OK = "OK";
+	public static final String FAIL = "FAIL";
 
-	public GameOverResponse(String gameID, String winner) {
-		this.gameID = gameID;
-		this.winner = winner;
+	private final String type = "REGISTERUSERRESPONSE";
+	private String status;
+	private String message;
+
+	public RegisterUserResponse(String status, String message) {
+		super();
+		this.status = status;
+		this.message = message;
 	}
 
 	@Override
@@ -23,27 +27,27 @@ public class GameOverResponse implements Response {
 			writer.write("\n[STARTJSON]\n" + toJSONString() + "\n[ENDJSON]\n");
 			writer.flush();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
 	}
 
 	@Override
 	public String toJSONString() {
 		return String.format(
-				"{ \"type\":\"%s\", \"gameID\":\"%s\", \"winner\":\"%s\" }",
-				type, gameID, winner);
+				"{ \"type\":\"%s\", \"status\":\"%s\", \"message\":\"%s\" }",
+				type, status, message);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		return "GameOverResponse [type=" + type + ", gameID=" + gameID
-				+ ", winner=" + winner + "]";
+		return "RegisterUserResponse [type=" + type + ", status=" + status
+				+ ", message=" + message + "]";
 	}
-	
-	
 
 }

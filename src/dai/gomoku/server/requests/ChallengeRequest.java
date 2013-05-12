@@ -1,12 +1,8 @@
 package dai.gomoku.server.requests;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.Socket;
-
-import dai.gomoku.server.AvailablePlayersList;
 import dai.gomoku.server.Request;
 import dai.gomoku.server.Response;
+import dai.gomoku.server.responses.ChallengeResponse;
 
 public class ChallengeRequest implements Request {
 	public static final String MAKE = "MAKE";
@@ -74,11 +70,23 @@ public class ChallengeRequest implements Request {
 	public Response process() {
 		// TODO: Send the challenge to the opponent and then set a status
 		// awaiting a response.
-		
+
 		// TODO: Read the response from the opponent
 		// TODO: If accepted, send accept, otherwise send refuse
-		return null;
+		return new ChallengeResponse(challengerUsername, challengeeUsername,
+				message);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "ChallengeRequest [type=" + type + ", challengerUsername="
+				+ challengerUsername + ", challengeeUsername="
+				+ challengeeUsername + ", message=" + message + "]";
+	}
 
 }

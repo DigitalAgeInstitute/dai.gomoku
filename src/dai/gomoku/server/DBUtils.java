@@ -100,7 +100,7 @@ public class DBUtils {
 		if (!usernameExists(player.getUserName())) {
 			String registerString = String
 					.format("INSERT INTO signup(fname, lname, email, contacts, "
-							+ "password, username) VALUES('%s', '%s', '%s', '%s', '%s', '%s')",
+							+ "password, username) VALUES('%s', '%s', '%s', '%s', password('%s'), '%s')",
 							player.getFirstName(), player.getLastName(),
 							player.getEmail(), player.getContacts(), password,
 							player.getUserName());
