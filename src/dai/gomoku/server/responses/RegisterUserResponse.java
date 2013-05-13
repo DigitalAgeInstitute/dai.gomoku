@@ -24,7 +24,9 @@ public class RegisterUserResponse implements Response {
 	public void respond(Socket socket) {
 		try {
 			PrintWriter writer = new PrintWriter(socket.getOutputStream());
-			writer.write("\n[STARTJSON]\n" + toJSONString() + "\n[ENDJSON]\n");
+			writer.write("\n[STARTJSON]\n");
+			writer.write(toJSONString());
+			writer.write("\n[ENDJSON]\n");
 			writer.flush();
 		} catch (IOException e) {
 			e.printStackTrace();

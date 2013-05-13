@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import dai.gomoku.game.core.Player;
+import dai.gomoku.server.responses.SendPlayerResponse;
 
 /**
  * This is created when the first thread ever needs the list of {@link Player}
@@ -47,6 +48,7 @@ public class AvailablePlayersList {
 
 	public synchronized void addPlayerToList(Player player) {
 		availablePlayers.add(player);
+		sendPlayers();
 	}
 
 	public void removePlayerFromList(Player player) {
@@ -78,6 +80,12 @@ public class AvailablePlayersList {
 			}
 		}
 		return player;
+	}
+	
+	private void sendPlayers ( ) {
+		for ( Iterator<Player> it = availablePlayers.iterator(); it.hasNext(); ) {
+			new SendPlayerResponse().respond( it.next().getPlayerThread().getClientSocket() );
+		}
 	}
 
 }

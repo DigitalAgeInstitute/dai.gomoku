@@ -93,6 +93,7 @@ public class JSONRequestHandler implements Runnable, GameWinListener {
 						Gson gson = new Gson();
 						RequestWrapper wrapper = gson.fromJson(completeInput,
 								RequestWrapper.class);
+						System.out.println(wrapper);
 
 						// TODO: Create appropriate Request object
 						Request request = RequestFactory

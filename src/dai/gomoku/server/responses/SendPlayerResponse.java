@@ -38,11 +38,13 @@ public class SendPlayerResponse implements Response {
 	}
 
 	private void initPlayersString() {
+		
 		// TODO: Implement this correctly
 		playersString = String.format(
 				"\n[STARTJSON]\n{ \"type\":\"%s\", \"players\":[", type);
 		for (Player player : players) {
-			playersString += String.format("{\"%s\"},", player.toJSONString());
+			System.out.println("PLAYER::: " + player.toJSONString());
+			playersString += player.toJSONString()+",";
 		}
 		playersString = playersString.substring(0, playersString.length() - 1);
 		playersString += "] }\n[ENDJSON]\n";
