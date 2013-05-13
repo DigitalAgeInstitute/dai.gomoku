@@ -10,29 +10,31 @@ import java.net.InetAddress;
 import java.net.Socket;
 
 import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 
 public class ClientThread extends Thread {
 
-	static final String SERVER_IP = "192.168.3.106";
+	static final String SERVER_IP = "192.168.3.122";
 	static final int SERVER_PORT = 4010;
 
-	Handler handler = new Handler();
+	Handler handler ;
+	String strReceived;
 	static Socket socket;
 
 	PrintWriter out;
 	BufferedReader br;
-
+	ResponseFactory responseFactory;
+	public ClientThread(Handler handler) {
+		this.handler=handler;
+	}
 	public void run() {
+		Looper.prepare();
 		try {
 			InetAddress serverAddr = InetAddress.getByName(SERVER_IP);
 
-			handler.post(new Runnable() {
-				@Override
-				public void run() {
-					// toast connecting to server
-				}
-			});
+			
 
 			socket = new Socket(serverAddr, SERVER_PORT);
 			try {
@@ -47,45 +49,40 @@ public class ClientThread extends Thread {
 				try {
 					// ---read all incoming data terminated with a \n
 					// char---
-					String line = null;
+					
+					String line = "";
 					while ((line = br.readLine()) != null) {
-						final String strReceived = line;
-
-						handler.post(new Runnable() {
-							@Override
-							public void run() {
-								Log.e("recieve from server", strReceived);
+						if (line.equals("[STARTJSON]")) {
+							strReceived = "";
+							while ((line = br.readLine()) != null) {
+								if (line.equals("[ENDJSON]")) {
+									break;
+								}
+								strReceived += line;
+								handler.sendEmptyMessage(0);
+								try {
+									responseFactory = new ResponseFactory(
+											strReceived);
+									Log.e("recieve from server", strReceived);
+									responseFactory.doCalledResponse();
+								} catch (Exception e) {
+									e.printStackTrace();
+									Log.e("doesnt get from server", strReceived);
+								}
 							}
-						});
-					}
-
-					// ---disconnected from the server---
-					handler.post(new Runnable() {
-						@Override
-						public void run() {
-							// client disconnected
-							Log.e("client disconnected", "");
 						}
-					});
 
+						// ---disconnected from the server---
+					
+					}
 				} catch (Exception e) {
 					final String error = e.getLocalizedMessage();
-					handler.post(new Runnable() {
-						@Override
-						public void run() {
-
-						}
-					});
+					
 				}
 
 			} catch (Exception e) {
 				final String error = e.getLocalizedMessage();
-				handler.post(new Runnable() {
-					@Override
-					public void run() {
-
-					}
-				});
+				
 			}
 
 			handler.post(new Runnable() {
@@ -94,7 +91,7 @@ public class ClientThread extends Thread {
 					// connection closed
 				}
 			});
-
+			Looper.loop();
 		} catch (Exception e) {
 			final String error = e.getLocalizedMessage();
 			handler.post(new Runnable() {
@@ -105,21 +102,23 @@ public class ClientThread extends Thread {
 			});
 		}
 	}
-	
-	 public void sendMessage(String message){
-	        if (out != null && !out.checkError()) {
-	        	String msg = "\n[STARTJSON]\n" + message + "\n[ENDJSON]\n";
-	        	Log.e("json", msg);
-	            //out.println(msg);
-	        	out.write(msg);
-	            out.flush();
-	        }
-	    }
 
-	/*protected void onStart() {
-		Thread clientThread = new Thread(new ClientThread());
-		
-	}*/
+	public void sendMessage(String message) {
+		if (out != null && !out.checkError()) {
+			String msg = "\n[STARTJSON]\n" + message + "\n[ENDJSON]\n";
+			Log.e("json", msg);
+			// out.println(msg);
+			out.write(msg);
+			out.flush();
+		}
+	}
+
+	/*
+	 * protected void onStart() { Thread clientThread = new Thread(new
+	 * ClientThread());
+	 * 
+	 * }
+	 */
 
 	protected void onStop() {
 		try {
