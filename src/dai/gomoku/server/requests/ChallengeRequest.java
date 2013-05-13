@@ -14,6 +14,13 @@ public class ChallengeRequest implements Request {
 	private String challengeeUsername;
 	private String message;
 
+	public ChallengeRequest(String challengerUsername,
+			String challengeeUsername, String message) {
+		this.challengerUsername = challengerUsername;
+		this.challengeeUsername = challengeeUsername;
+		this.message = message;
+	}
+
 	/**
 	 * @return the challengerUsername
 	 */

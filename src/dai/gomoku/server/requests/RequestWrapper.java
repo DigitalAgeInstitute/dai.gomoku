@@ -40,11 +40,11 @@ public class RequestWrapper {
 	@SerializedName("challengerUsername")
 	private String challengerUsername;
 
-	@SerializedName("chalengeeUsername")
-	private String challengeeUsername;
-
 	@SerializedName("message")
 	private String message;
+	
+	@SerializedName("challengeeUsername")
+	private String challengeeUsername;
 
 	@SerializedName("firstName")
 	private String firstName;
@@ -148,6 +148,22 @@ public class RequestWrapper {
 	 */
 	public String getContacts() {
 		return contacts;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "RequestWrapper [type=" + type + ", username=" + username
+				+ ", password=" + password + ", gameID=" + gameID + ", row="
+				+ row + ", col=" + col + ", challengerUsername="
+				+ challengerUsername + ", challengeeUsername="
+				+ challengeeUsername + ", message=" + message + ", firstName="
+				+ firstName + ", lastName=" + lastName + ", email=" + email
+				+ ", contacts=" + contacts + "]";
 	}
 
 }
