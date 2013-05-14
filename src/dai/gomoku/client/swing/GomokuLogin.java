@@ -7,6 +7,11 @@ import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.swing.*;
 
@@ -15,18 +20,32 @@ import javax.swing.*;
  * @author Muaad
  */
 public class GomokuLogin extends JFrame {
+	private Socket socket;
+	private Requests requests = null;
+	InputStream inputFromServer;
 
     /**
      * Creates new form GomokuLogin
      */
-    public GomokuLogin() {
+    public GomokuLogin( Socket socket ) {
+    	this.socket = socket;
     	setTitle("Gomoku :: Login");
     	setResizable(false);
     	GUIUtilities.center(this);
         initComponents();
+        initRequests();
     }
 
-    Requests requests = new Requests();
+    private void initRequests ( ) {
+    	try {
+			requests = new Requests(socket);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+    
+    
     
     private void initComponents() {
 
@@ -189,14 +208,23 @@ public class GomokuLogin extends JFrame {
 		requests.user = userTxt.getText();
 		requests.pass = new String(passwordField.getPassword());
 		requests.sendRequests(requests.generateLoginRequest(requests.user, requests.pass));
-		if (true) {
+		try {
+			inputFromServer = socket.getInputStream();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		this.setVisible(false);
+		/*if (true) {
 			this.dispose();
-			GomokuGUI gomo = new GomokuGUI();
+			service = Executors.newCachedThreadPool();
+			service.execute(rh);
 			//gomo.lblScore.setText("You are logged in as: "+ userTxt.getText());
 		}
 		else {
 			JOptionPane.showMessageDialog(null, "Login Failed!!");
-		}
+		}*/
 	}
 	
     private void signUpButtonActionPerformed(java.awt.event.ActionEvent evt) {
@@ -227,13 +255,14 @@ public class GomokuLogin extends JFrame {
         forgotDetailsButton.setText("<html><body style = \"text-decoration:underline;\">I forgot my details</body></html>");
     }
     
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new GomokuLogin().setVisible(true);
-            }
-        });
-    }
+/*	public static void main(String args[]) {
+		java.awt.EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				new GomokuLogin().setVisible(true);
+			}
+		});
+	}*/
+    
     // Variables declaration - do not modify
     private JButton cancelButton;
     private JButton forgotDetailsButton;

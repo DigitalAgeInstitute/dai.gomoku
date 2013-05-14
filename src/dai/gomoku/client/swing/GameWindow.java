@@ -1,13 +1,19 @@
-/*package dai.gomoku.client.swing;
+package dai.gomoku.client.swing;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.ArrayList;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.HashSet;
 import java.util.List;
 
-import javax.swing.*;
-import javax.swing.event.*;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JInternalFrame;
+import javax.swing.JPanel;
+import javax.swing.event.InternalFrameEvent;
+import javax.swing.event.InternalFrameListener;
 
 public class GameWindow extends JInternalFrame {
 	//JInternalFrame internalFrame;
@@ -20,19 +26,22 @@ public class GameWindow extends JInternalFrame {
 	int count = 0;
 	VirtualBoard vb = new VirtualBoard();
 	FindWinner winner = new FindWinner();
-	Requests requests = new Requests();
 	List<Integer> xList;
 	List<Integer> oList;
 	HashSet<List<Integer>> xxSet = new HashSet<List<Integer>>();
 	HashSet<List<Integer>> ooSet = new HashSet<List<Integer>>();
 	boolean dontWantActionListener = false;
 	static String title = "Game VS ";
+	String separator = System.getProperty("file.separator");
+	Requests requests = null;
+	ClientController controller;
 
-	public GameWindow() {
+	public GameWindow(ClientController controller) {
 		super(title, true, // resizable
 				true, // closable
 				true, // maximizable
 				true);// iconifiable
+		this.controller = controller;
 		addInternalFrameListener(new InternalFrameListener() {
             public void internalFrameActivated(InternalFrameEvent evt) {
             }
@@ -101,50 +110,30 @@ public class GameWindow extends JInternalFrame {
 					
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						count++;
-						if (count % 2 == 0) {	
-							//requests.sendRequests(requests.generateMoveRequest("12hjg265", "x", a, b));
-							oList = new ArrayList<Integer>();
-							oList.add(a);
-							oList.add(b);
-							if(vb.occupiedCells.add(oList)) {
-								((JButton) e.getSource()).setIcon(new ImageIcon("F:\\projects\\dai.gomoku\\src\\dai\\gomoku\\client\\swing\\o.PNG"));
-								vb.board[a][b] = 'O';
-								if(winner.hasSomeOneWon(vb.board) == 'O') {
-									System.out.println("O is the winner!");
-								}
-								for(String s : hints.generateHint(vb.board, 'O')) {
-									buttonArray[Integer.parseInt(s.split(",")[0])][Integer.parseInt(s.split(",")[1])].setBackground(Color.RED);
-								}
-							}
-							else {
-								count--;
-							}
-						}
-						else {	
-							//requests.sendRequests(requests.generateMoveRequest("12hjg265", "o", a, b));
-							xList = new ArrayList<Integer>();
-							xList.add(a);
-							xList.add(b);
-							if(vb.occupiedCells.add(xList)) {
-								((JButton) e.getSource()).setIcon(new ImageIcon("F:\\projects\\dai.gomoku\\src\\dai\\gomoku\\client\\swing\\x.PNG"));
-								vb.board[a][b] = 'X';
-								if(winner.hasSomeOneWon(vb.board) == 'X') {
-									
-								}
-							}
-							else {
-								count--;
-							}
-						}
+						//requests.sendRequests(requests.generateMoveRequest(gameID, user, a, col));
+						
+						requests.row = a;
+						requests.row = b;
+						requests.sendRequests(requests.generateMoveRequest(
+								requests.gameID, requests.user, requests.row, requests.col));
+						
+						
 					}
 				});
 			boardPanel.add(buttonArray[x][i]);
 			}
 		}
 	}
+	
+	public void markButton(int row, int col, char user) {
+		if(user == 'X' || user == 'x') {
+			buttonArray[row][col].setIcon(new ImageIcon("images"+separator+"x.PNG"));
+		}
+		else if(user == 'O' || user == 'o') {
+			buttonArray[row][col].setIcon(new ImageIcon("images"+separator+"o.PNG"));
+		} 
+	}
 	private void gameWindowClosing(InternalFrameEvent evt) {
 		System.out.println("closed");
 	}
 }
-*/

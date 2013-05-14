@@ -3,20 +3,50 @@ package dai.gomoku.client.swing;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.net.Socket;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-public class SignUpFrame extends JFrame {
+public class SignUpFrame extends JFrame implements ParentThread {
 	
 	public SignUpFrame() {
 		createGUI();
 		GUIUtilities.center(this);
+		initRequests();
+		connectToServer();
 	}
 	
 	User user = new User();
-	Requests requests = new Requests();
+	Requests requests = null;
+	Socket socket;
+	ClientController controller;
+	
+	@Override
+    public Socket getSocket ( ) {
+    	return socket;
+    }
+
+    private void initRequests ( ) {
+    	try {
+			requests = new Requests(socket);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+    
+    private void connectToServer ( ) {
+    	try {
+			socket = new Connection().returnSocket("localhost", 4010);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+
 
     private void createGUI() {
     	topPanel = new JPanel();
@@ -116,8 +146,6 @@ public class SignUpFrame extends JFrame {
 					} catch (NumberFormatException e) {
 						JOptionPane.showMessageDialog(null, "Please provide the right data format");
 					}
-					new GomokuGUI().setVisible(true);
-					dispose();
 				}
 				else {
 					checkPasswordMatchLabel.setText("Passwords Don't Match");
@@ -285,7 +313,7 @@ public class SignUpFrame extends JFrame {
     }                                       
 
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {                                            
-        new GomokuLogin().setVisible(true);
+        //new GomokuLogin().setVisible(true);
         this.dispose();
     } 
     

@@ -1,6 +1,11 @@
 package dai.gomoku.client.swing.responses;
 
+import java.util.List;
+
 import com.google.gson.annotations.SerializedName;
+
+import dai.gomoku.game.core.HumanPlayer;
+import dai.gomoku.game.core.Player;
 
 public class ResponseWrapper {
 	@SerializedName("type")
@@ -8,6 +13,9 @@ public class ResponseWrapper {
 
 	@SerializedName("username")
 	private String username;
+
+	@SerializedName("state")
+	private String state;
 
 	@SerializedName("status")
 	private String status;
@@ -20,11 +28,21 @@ public class ResponseWrapper {
 
 	@SerializedName("col")
 	private int col;
-	
+
+	@SerializedName("players")
+	private List<HumanPlayer> players;
+
 	public String getType() {
 		return type;
 	}
-	
+
+	/**
+	 * @return the status
+	 */
+	public String getState() {
+		return state;
+	}
+
 	/**
 	 * @return the status
 	 */
@@ -60,5 +78,18 @@ public class ResponseWrapper {
 		return col;
 	}
 
-}
+	/**
+	 * @return the players
+	 */
+	public List<HumanPlayer> getPlayers() {
+		return players;
+	}
 
+	@Override
+	public String toString() {
+		return "ResponseWrapper [type=" + type + ", username=" + username
+				+ ", state=" + state + ", gameID=" + gameID + ", row=" + row
+				+ ", col=" + col + "]";
+	}
+
+}
