@@ -2,13 +2,16 @@ package dai.gomoku.client.android;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
+import android.text.InputType;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -17,9 +20,11 @@ public class Gomoku_login extends Activity implements OnClickListener {
 	TextView registerScreen;
 	EditText loginEditText, passwordEditText;
 	Button signInButton;
-	String loginUser, password, sentJSON;
-	private ClientThread gomokuTcpClient;
-	Handler handler = new Handler();
+	CheckBox chckbx;
+	public static String password, loginUser;
+	String sentJSON;
+	static ClientThread gomokuTcpClient;
+	Handler handler;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -28,11 +33,27 @@ public class Gomoku_login extends Activity implements OnClickListener {
 		setContentView(R.layout.gomoku_login);
 		// initalizes variables and views
 		initalizeVariables();
+		handler = new Handler() {
+			@Override
+			public void handleMessage(Message msg) {
+				//TextView t = new TextView(Gomoku_login.this);
+				//t.setText(gomokuTcpClient.strReceived);
+				//Gomoku_login.this.setContentView(t);
+				Intent list = new Intent(Gomoku_login.this,CustomizedListView.class);
+				list.putExtra("json", gomokuTcpClient.strReceived);
+				startActivity(list);
+			}
+		};
+
 		// connect to the server
-		//new connectTask().execute("");
-		gomokuTcpClient = new ClientThread();
+		connectToServer();
+
+	}
+
+	private void connectToServer() {
+		// new connectTask().execute("");
+		gomokuTcpClient = new ClientThread(handler);
 		gomokuTcpClient.start();
-		
 
 	}
 
@@ -42,10 +63,12 @@ public class Gomoku_login extends Activity implements OnClickListener {
 		loginEditText = (EditText) findViewById(R.id.loginNameGomokuET);
 		passwordEditText = (EditText) findViewById(R.id.passwordGomokuET);
 		signInButton = (Button) findViewById(R.id.signinGomokuBtn);
+		chckbx = (CheckBox) findViewById(R.id.gomokucheckBox1);
 
 		// make the below view listeners
 		registerScreen.setOnClickListener(this);
 		signInButton.setOnClickListener(this);
+		chckbx.setOnClickListener(this);
 
 	}
 
@@ -53,6 +76,15 @@ public class Gomoku_login extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
+		case R.id.gomokucheckBox1:
+			//
+			if (chckbx.isChecked()) {
+				passwordEditText.setInputType(InputType.TYPE_CLASS_TEXT);
+			} else {
+				passwordEditText.setInputType(InputType.TYPE_CLASS_TEXT
+						| InputType.TYPE_TEXT_VARIATION_PASSWORD);
+			}
+			break;
 		case R.id.link_to_register:
 			// Switching to Register screen
 			Intent i = new Intent(getApplicationContext(),
@@ -62,16 +94,43 @@ public class Gomoku_login extends Activity implements OnClickListener {
 		case R.id.signinGomokuBtn:
 			// send sign in data to server
 			getValues();
-			
-			handler.post(new Runnable() {
-				@Override
-				public void run() {
-				gomokuTcpClient.sendMessage(turnObjectToJSON(loginUser, password));
-				}
-			});
+
+			// checks if input is correct
+			checkFieldAndSendMsg();
+
 		default:
 			break;
 		}
+	}
+
+	private void checkFieldAndSendMsg() {
+		// check if there is input
+		try {
+			// resets error to null
+			loginEditText.setError(null);
+			passwordEditText.setError(null);
+
+			// checks for valid password.
+			if (TextUtils.isEmpty(loginUser)) {
+				loginEditText
+						.setError(getString(R.string.error_field_required));
+			} else if (TextUtils.isEmpty(password)) {
+				passwordEditText
+						.setError(getString(R.string.error_field_required));
+			} else {
+				handler.post(new Runnable() {
+					@Override
+					public void run() {
+						gomokuTcpClient.sendMessage(turnObjectToJSON(loginUser,
+								password));
+					}
+				});
+			}
+
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+
 	}
 
 	private void getValues() {
@@ -91,17 +150,4 @@ public class Gomoku_login extends Activity implements OnClickListener {
 		return sentJSON;
 
 	}
-
-	/*public class connectTask extends
-			AsyncTask<String, String, GomokuAndroidClientTCP> {
-
-		@Override
-		protected GomokuAndroidClientTCP doInBackground(String... message) {
-
-			// we create a TCPClient object and
-
-			return null;
-		}
-
-	}*/
 }

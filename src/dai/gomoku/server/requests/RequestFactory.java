@@ -36,6 +36,8 @@ public class RequestFactory {
 			return buildLoginRequestFromWrapper(wrapper, parentThread);
 		case "MAKEMOVE":
 			return buildMakeMoveRequestFromWrapper(wrapper);
+		case "CHALLENGE":
+			return buildChallengeRequestFromWrapper(wrapper);
 		case "REGISTERUSER":
 			return buildRegisterUserRequestRequestFromWrapper(wrapper);
 		default:
@@ -64,6 +66,12 @@ public class RequestFactory {
 	public static Request buildMakeMoveRequestFromWrapper(RequestWrapper wrapper) {
 		return new MakeMoveRequest(wrapper.getGameID(), wrapper.getUsername(),
 				wrapper.getRow(), wrapper.getCol());
+	}
+
+	public static Request buildChallengeRequestFromWrapper(
+			RequestWrapper wrapper) {
+		return new ChallengeRequest(wrapper.getChallengerUsername(),
+				wrapper.getChallengeeUsername(), wrapper.getMessage());
 	}
 
 	public static Request buildRegisterUserRequestRequestFromWrapper(

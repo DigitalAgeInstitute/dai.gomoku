@@ -3,114 +3,91 @@ package dai.gomoku.client.android;
 import java.util.ArrayList;
 import android.app.Activity;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.TypedValue;
 import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class GomokuAndroidUI extends Activity {
-	ArrayList<TextView> arrTextViews;
+	static ArrayList<TextView> arrTextViews;
 	int[][] coordinates = new int[15][15];
 	boolean player1 = true;
+	private ClientThread gomokuTcpClient;
+	String sentJSON;
+	Handler handler = new Handler();
+	static LinearLayout layout;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		LinearLayout layout = new LinearLayout(this);
-		// create an instance of the LinearLayout class called layout
+
+		gomokuTcpClient = new ClientThread(handler);
+		gomokuTcpClient.start();
+
+		layout = new LinearLayout(this);
 
 		layout.setOrientation(LinearLayout.VERTICAL);
-		// this sets the orientation of the layout(LinearLayout) to vertical
-
 		LinearLayout.LayoutParams mainParams = new LinearLayout.LayoutParams(
 				LinearLayout.LayoutParams.MATCH_PARENT,
 				LinearLayout.LayoutParams.MATCH_PARENT);
-		// this here sets mainParam the layout to fill the whole screen of a
-		// device hence refereed to as parent
-
 		layout.setLayoutParams(mainParams);
-		// here the layout is set to the params assign to mainParams
-
 		LinearLayout.LayoutParams rowParams = new LinearLayout.LayoutParams(
 				LinearLayout.LayoutParams.MATCH_PARENT, 0, 1.0f);
 		LinearLayout.LayoutParams colParams = new LinearLayout.LayoutParams(0,
 				LinearLayout.LayoutParams.MATCH_PARENT, 1.0f);
-		// here the row and column params are assigned to variable to be used
-		// later
 
-		int length = 81;
+		int length = 225;
 		int index = 0;
-		int no_of_column = 9;
+		int no_of_column = 15;
 		int num_of_row = length / no_of_column;
-		// variable are created and assign values
 
 		arrTextViews = new ArrayList<TextView>(length);
-		
+
 		for (int i = 0; i < length; i++) {
 			final TextView textView = new TextView(this);
-			// creates an instance of class TextView
-
 			textView.setLayoutParams(colParams);
-			// sets the column width
-
 			textView.setId(i);
 			textView.setText("");
-
 			textView.setGravity(Gravity.CENTER);
-			// sets the textView at the centre
-
 			textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-			// sets the textView size to the value
-
-			/*
-			 * textView.setText(count); count++;
-			 */
 
 			if ((i % 2) == 0) {
-
 				textView.setBackgroundColor(Color.rgb(166, 172, 169));
-				// sets the colour of the TextView
-			} else{
+			} else {
 				textView.setBackgroundColor(Color.rgb(227, 233, 227));
 			}
-			
-			/*
-			 * else { textView.setBackgroundDrawable(getResources().getDrawable(
-			 * R.drawable.first_aid_kit)); }
-			 */
+
 			textView.setOnClickListener(new View.OnClickListener() {
 
-				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
-					TextView tView = (TextView) v;
-					if(tView.getText().equals("")){
-						if(player1){
-							tView.setText("X");
-							tView.setTextColor(Color.BLUE);
-							tView.setTypeface(null, Typeface.BOLD);
-						}else {
-							tView.setText("O");
-							tView.setTextColor(Color.BLUE);
-							tView.setTypeface(null, Typeface.BOLD);
+					final TextView tView = (TextView) v;
+					if (tView.getText().equals("")) {
+						if(UpdateUI.ifcanPlay==true){
+						handler.post(new Runnable() {
+							@Override
+							public void run() {
+								gomokuTcpClient.sendMessage(String
+										.format("{ \"type\":\"MAKEMOVE\", \"username\":\"%s\", \"gameID\":\"%s\", \"row\":\"%s\", \"col\":\"%s\" }",
+												Gomoku_login.loginUser, ChallengeResponse.gameId,(tView.getId()/15)+"",(tView.getId()%15)+""));
+							}
+						});
 						}
-					} else{
+						tView.setText("O");
+						UpdateUI.ifcanPlay = !UpdateUI.ifcanPlay;
+					} else {
 						Toast.makeText(
 								getApplication(),
 								((tView.getText()) == "O" ? "player O cant play here"
 										: "player X cant play here"),
 								Toast.LENGTH_SHORT).show();
 					}
-					
-					player1 = (!player1);
-					
-					//new FindWhoWins(arrTextViews, GomokuAndroidUI.this);
+
+					// new FindWhoWins(arrTextViews, GomokuAndroidUI.this);
 					v = tView;
 				}
 
@@ -131,14 +108,6 @@ public class GomokuAndroidUI extends Activity {
 		}
 		setContentView(layout);
 
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// TODO Auto-generated method stub
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.main, menu);
-		return true;
 	}
 
 }
