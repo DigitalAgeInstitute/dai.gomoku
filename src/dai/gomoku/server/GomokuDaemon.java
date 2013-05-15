@@ -29,6 +29,8 @@ public class GomokuDaemon implements Runnable {
 	public void run() {
 		System.out
 				.println("Server listening on port " + ssocket.getLocalPort());
+		HeartBeatChecker heartBeat = HeartBeatChecker.getInstance();
+		serviceThreads.execute(heartBeat);
 		while (!stopped) {
 			Socket clientSocket;
 			try {

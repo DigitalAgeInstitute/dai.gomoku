@@ -30,16 +30,18 @@ public class RequestFactory {
 	 * @return an object that implements the {@link Request} interface
 	 */
 	public static Request buildRequestFromWrapper(RequestWrapper wrapper,
-			JSONRequestHandler parentThread) {
+			JSONRequestHandler handler) {
 		switch (wrapper.getType()) {
 		case "LOGIN":
-			return buildLoginRequestFromWrapper(wrapper, parentThread);
+			return buildLoginRequestFromWrapper(wrapper, handler);
 		case "MAKEMOVE":
 			return buildMakeMoveRequestFromWrapper(wrapper);
 		case "CHALLENGE":
 			return buildChallengeRequestFromWrapper(wrapper);
 		case "REGISTERUSER":
 			return buildRegisterUserRequestRequestFromWrapper(wrapper);
+		case "HEARTBEAT":
+			return new HeartBeatRequest(handler);
 		default:
 			return buildUnknownRequestFromWrapper(wrapper);
 		}

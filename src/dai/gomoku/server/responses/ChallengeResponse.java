@@ -51,6 +51,7 @@ public class ChallengeResponse implements Response {
 				challenger.getPlayerThread().addGame(game.getGameID(), game);
 				challengee.getPlayerThread().addGame(game.getGameID(), game);
 				this.gameID = game.getGameID();
+				sendTo(challengeeUsername);
 			}
 			sendTo(challengerUsername);
 		}

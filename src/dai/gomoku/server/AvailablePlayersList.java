@@ -55,6 +55,7 @@ public class AvailablePlayersList {
 		if (availablePlayers.contains(player)) {
 			synchronized (player) {
 				availablePlayers.remove(player);
+				sendPlayers();
 			}
 		}
 	}

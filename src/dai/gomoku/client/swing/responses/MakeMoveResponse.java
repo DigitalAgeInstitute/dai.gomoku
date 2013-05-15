@@ -1,14 +1,9 @@
 package dai.gomoku.client.swing.responses;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.Socket;
-
 import javax.swing.JOptionPane;
 
 import dai.gomoku.client.Response;
 import dai.gomoku.client.swing.ClientController;
-import dai.gomoku.client.swing.GameWindow;
 
 public class MakeMoveResponse implements Response {
 	public static final String OK = "OK";

@@ -90,15 +90,15 @@ public class LoginRequest implements Request {
 				// list of available players
 				Player player = DBUtils.createPlayer(username);
 				player.setPlayerThread(this.playerThread);
-				AvailablePlayersList.getInstance().addPlayerToList(player);
+				
 
 				// TODO: Return a response indicating success of the
 				// authentication
-				return new LoginResponse(LoginResponse.OK);
+				return new LoginResponse(LoginResponse.OK, player);
 			} else {
 				// TODO: Return a response indicating failure of the
 				// authentication
-				return new LoginResponse(LoginResponse.FAIL);
+				return new LoginResponse(LoginResponse.FAIL, null);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

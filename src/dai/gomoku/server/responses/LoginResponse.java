@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+import dai.gomoku.game.core.Player;
+import dai.gomoku.server.AvailablePlayersList;
 import dai.gomoku.server.Response;
 
 public class LoginResponse implements Response {
@@ -12,9 +14,12 @@ public class LoginResponse implements Response {
 
 	private String type = "LOGIN";
 	private String state = "";
+	
+	private Player player;
 
-	public LoginResponse(String state) {
+	public LoginResponse(String state, Player player ) {
 		this.state = state;
+		this.player = player;
 	}
 
 	/**
@@ -62,9 +67,9 @@ public class LoginResponse implements Response {
 			writer = new PrintWriter(socket.getOutputStream());
 			writer.write("\n[STARTJSON]\n" + toJSONString() + "\n[ENDJSON]\n");
 			writer.flush();
-			/*if (state == OK) {
-				new SendPlayerResponse().respond(socket);
-			}*/
+			if (state == OK) {
+				AvailablePlayersList.getInstance().addPlayerToList(player);
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

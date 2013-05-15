@@ -26,6 +26,8 @@ public class JSONRequestHandler implements Runnable, GameWinListener {
 
 	private Map<String, GomokuGame> games;
 
+	private boolean stopped = false;
+
 	public JSONRequestHandler(Socket clientSocket) throws IOException {
 		this.clientSocket = clientSocket;
 		games = new HashMap<String, GomokuGame>();
@@ -71,6 +73,10 @@ public class JSONRequestHandler implements Runnable, GameWinListener {
 		response.respond(ResponseUtil.getPlayerSocket(loser.getUserName()));
 	}
 
+	public void stop() {
+		this.stopped = true;
+	}
+
 	@Override
 	public void run() {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(
@@ -79,6 +85,9 @@ public class JSONRequestHandler implements Runnable, GameWinListener {
 
 		try {
 			while ((inputLine = reader.readLine()) != null) {
+				if (stopped) {
+					break;
+				}
 				if (inputLine.equals("[STARTJSON]")) {
 					String completeInput = "";
 					while ((inputLine = reader.readLine()) != null) {
@@ -87,7 +96,7 @@ public class JSONRequestHandler implements Runnable, GameWinListener {
 						} else {
 							completeInput += inputLine;
 						}
-						
+
 						System.out.println("RECEIVED: " + completeInput);
 						// TODO: Parse the JSON
 						Gson gson = new Gson();
@@ -118,7 +127,7 @@ public class JSONRequestHandler implements Runnable, GameWinListener {
 		}
 
 		releaseResources();
-
+		System.out.println("Client Handler died... We shall miss her.");
 	}
 
 	private void initIO() throws IOException {

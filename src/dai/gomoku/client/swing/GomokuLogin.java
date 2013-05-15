@@ -1,280 +1,205 @@
 package dai.gomoku.client.swing;
 
-import java.awt.CardLayout;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.awt.Window;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.Socket;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
 
-/**
- *
- * @author Muaad
- */
-public class GomokuLogin extends JFrame {
-	private Socket socket;
-	private Requests requests = null;
-	InputStream inputFromServer;
+public class GomokuLogin extends JFrame implements GameModelListener,
+		ActionListener {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4391853159413575379L;
+	private JLabel lblUserName;
+	private JTextField txtUserName;
+	private JLabel lblPassword;
+	private JPasswordField pswdPassword;
 
-    /**
-     * Creates new form GomokuLogin
-     */
-    public GomokuLogin( Socket socket ) {
-    	this.socket = socket;
-    	setTitle("Gomoku :: Login");
-    	setResizable(false);
-    	GUIUtilities.center(this);
-        initComponents();
-        initRequests();
-    }
+	private JButton btnSignIn;
+	private JButton btnRegister;
+	
+	private ClientController controller;
+	
+	private List<LoginListener> listeners;
 
-    private void initRequests ( ) {
-    	try {
-			requests = new Requests(socket);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    }
-    
-    
-    
-    private void initComponents() {
-
-        panel = new JPanel();
-        loginPanel = new JPanel();
-        userLabel = new JLabel();
-        userTxt = new JTextField();
-        passTxt = new JTextField();
-        passwordField = new JPasswordField();
-        passLabel = new JLabel();
-        loginButton = new JButton();
-        cancelButton = new JButton();
-        jLabel3 = new JLabel();
-        signUpButton = new JButton();
-        forgotDetailsButton = new JButton();
-
-        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-
-        panel.setLayout(new java.awt.CardLayout());
-
-        userLabel.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        userLabel.setText("Username");
-
-        passLabel.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        passLabel.setText("Password");
-
-        loginButton.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        loginButton.setText("Login");
-        loginButton.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent evt) {
-				loginButtonActionPerformed(evt);
-			}
-		});
-
-        cancelButton.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        cancelButton.setText("Cancel");
-        cancelButton.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				System.exit(1);
-			}
-		});
-
-        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jLabel3.setText("Don't have an account?");
-
-        signUpButton.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        signUpButton.setForeground(new java.awt.Color(0, 0, 255));
-        signUpButton.setText("<html><body style = \"text-decoration:underline;\">Sign Up</body></html>");
-        signUpButton.setBorderPainted(false);
-        signUpButton.setContentAreaFilled(false);
-        signUpButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                signUpButtonMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                signUpButtonMouseExited(evt);
-            }
-        });
-        signUpButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                signUpButtonActionPerformed(evt);
-                setTitle("Gomoku :: Sign Up");
-            }
-        });
-
-        forgotDetailsButton.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        forgotDetailsButton.setForeground(new java.awt.Color(0, 0, 255));
-        forgotDetailsButton.setText("<html><body style = \"text-decoration:underline;\">I forgot my details</body></html>");
-        forgotDetailsButton.setBorderPainted(false);
-        forgotDetailsButton.setContentAreaFilled(false);
-        forgotDetailsButton.setHorizontalAlignment(SwingConstants.RIGHT);
-        forgotDetailsButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                forgotDetailsButtonMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                forgotDetailsButtonMouseExited(evt);
-            }
-        });
-        forgotDetailsButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                forgotDetailsButtonActionPerformed(evt);
-            }
-        });
-
-        GroupLayout loginPanelLayout = new GroupLayout(loginPanel);
-        loginPanel.setLayout(loginPanelLayout);
-        loginPanelLayout.setHorizontalGroup(
-            loginPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(loginPanelLayout.createSequentialGroup()
-                .addGap(45, 45, 45)
-                .addGroup(loginPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addGroup(loginPanelLayout.createSequentialGroup()
-                        .addComponent(userLabel, GroupLayout.PREFERRED_SIZE, 56, GroupLayout.PREFERRED_SIZE)
-                        .addGap(38, 38, 38)
-                        .addComponent(userTxt, GroupLayout.PREFERRED_SIZE, 175, GroupLayout.PREFERRED_SIZE))
-                    .addGroup(loginPanelLayout.createSequentialGroup()
-                        .addComponent(passLabel, GroupLayout.PREFERRED_SIZE, 56, GroupLayout.PREFERRED_SIZE)
-                        .addGap(38, 38, 38)
-                        .addGroup(loginPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                            .addComponent(passwordField, GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE)
-                            .addGroup(loginPanelLayout.createSequentialGroup()
-                                .addComponent(loginButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cancelButton, GroupLayout.PREFERRED_SIZE, 79, GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(77, Short.MAX_VALUE))
-            .addGroup(GroupLayout.Alignment.TRAILING, loginPanelLayout.createSequentialGroup()
-                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(loginPanelLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel3, GroupLayout.PREFERRED_SIZE, 136, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(signUpButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(forgotDetailsButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                .addGap(82, 82, 82))
-        );
-        loginPanelLayout.setVerticalGroup(
-            loginPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(loginPanelLayout.createSequentialGroup()
-                .addGap(60, 60, 60)
-                .addGroup(loginPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                    .addComponent(userTxt, GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
-                    .addComponent(userLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
-                .addGroup(loginPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                    .addComponent(passwordField)
-                    .addComponent(passLabel, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(loginPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(loginButton, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cancelButton, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(jLabel3, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(signUpButton, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(forgotDetailsButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(69, Short.MAX_VALUE))
-        );
-    
-        panel.add(loginPanel, "login");
-
-        GroupLayout layout = new GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(panel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(panel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-
-        pack();
-    }
-
-	private void loginButtonActionPerformed(ActionEvent evt) {
-		requests.user = userTxt.getText();
-		requests.pass = new String(passwordField.getPassword());
-		requests.sendRequests(requests.generateLoginRequest(requests.user, requests.pass));
-		try {
-			inputFromServer = socket.getInputStream();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		this.setVisible(false);
-		/*if (true) {
-			this.dispose();
-			service = Executors.newCachedThreadPool();
-			service.execute(rh);
-			//gomo.lblScore.setText("You are logged in as: "+ userTxt.getText());
-		}
-		else {
-			JOptionPane.showMessageDialog(null, "Login Failed!!");
-		}*/
+	public GomokuLogin( ClientController controller ) {
+		this.controller = controller;
+		initComponents();
+		addComponents();
+		setJFrameProperties();
+		listeners = new ArrayList<LoginListener>();
 	}
 	
-    private void signUpButtonActionPerformed(java.awt.event.ActionEvent evt) {
-    	new SignUpFrame().setVisible(true);
-    	this.dispose();
-    }
+	public String getUsername ( ) {
+		return txtUserName.getText();
+	}
+	
+	public String getPassword ( ) {
+		String pass = "";
+		char [] passChar = pswdPassword.getPassword();
+		for ( int i = 0; i < passChar.length; i++ ) {
+			pass += passChar[i];
+		}
+		return pass;
+	}
+	
+	public void registerGUIListener ( LoginListener listener ) {
+		listeners.add(listener);
+	}
+	
+	public void deregisterGUIListener ( LoginListener listener ) {
+		if ( listeners.contains(listener) ) {
+			listeners.remove(listener);
+		}
+	}
 
-    private void forgotDetailsButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        
-    }
+	@Override
+	public void update() {
+		// TODO: Get details from the model
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if ( e.getSource() == btnSignIn ) {
+			controller.hideLoginScreen();
+			notifyLoginListeners();
+		} else if ( e.getSource() == btnRegister ) {
+			controller.hideLoginScreen();
+			controller.displayRegisterScreen();
+		}
+		
+	}
+	
+	private void notifyLoginListeners ( ) {
+		for ( int i = 0; i < listeners.size(); i++ ) {
+			listeners.get(i).getLoginDetails();
+		}
+	}
 
-    private void signUpButtonMouseEntered(java.awt.event.MouseEvent evt) {
-        
-        signUpButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        signUpButton.setText("<html><body style = \"text-decoration:none;\">Sign Up</body></html>");
-    }
+	private void initComponents() {
+		initUsernameTextField();
+		initUsernameLabel();
+		initPasswordField();
+		initPasswordLabel();
+		initLoginButton();
+		initRegisterButton();
+	}
 
-    private void signUpButtonMouseExited(java.awt.event.MouseEvent evt) {
-        signUpButton.setText("<html><body style = \"text-decoration:underline;\">Sign Up</body></html>");
-    }
+	private void addComponents() {
+		this.getContentPane().setLayout(new GridBagLayout());
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.insets = new Insets(5, 5, 5, 5);
+		addUserNameLabel(gbc);
+		addUserNameTextField(gbc);
+		addPasswordLabel(gbc);
+		addPasswordField(gbc);
+		addSignUpButton(gbc);
+		addRegisterButton(gbc);
+	}
 
-    private void forgotDetailsButtonMouseEntered(java.awt.event.MouseEvent evt) {
-        forgotDetailsButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        forgotDetailsButton.setText("<html><body style = \"text-decoration:none;\">I forgot my details</body></html>");
-    }
+	private void setJFrameProperties() {
+		this.setSize(400, 200);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	}
 
-    private void forgotDetailsButtonMouseExited(java.awt.event.MouseEvent evt) {
-        forgotDetailsButton.setText("<html><body style = \"text-decoration:underline;\">I forgot my details</body></html>");
-    }
-    
-/*	public static void main(String args[]) {
-		java.awt.EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				new GomokuLogin().setVisible(true);
-			}
-		});
-	}*/
-    
-    // Variables declaration - do not modify
-    private JButton cancelButton;
-    private JButton forgotDetailsButton;
-    private JLabel jLabel3;
-    private JButton loginButton;
-    private JPanel loginPanel;
-    private JPanel panel;
-    private JLabel passLabel;
-    JPasswordField passwordField;
-    private JTextField passTxt;
-    private JButton signUpButton;
-    private JLabel userLabel;
-    private JTextField userTxt;
-    // End of variables declaration
+	private void initUsernameTextField() {
+		txtUserName = new JTextField(20);
+	}
+
+	private void initUsernameLabel() {
+		lblUserName = new JLabel("Username");
+		lblUserName.setLabelFor(txtUserName);
+	}
+
+	private void initPasswordField() {
+		pswdPassword = new JPasswordField();
+	}
+
+	private void initPasswordLabel() {
+		lblPassword = new JLabel("Password");
+		lblPassword.setLabelFor(pswdPassword);
+	}
+
+	private void initLoginButton() {
+		btnSignIn = new JButton("Sign In");
+		btnSignIn.addActionListener(this);
+	}
+	
+	private void initRegisterButton() {
+		btnRegister = new JButton("Register");
+		btnRegister.addActionListener(this);
+	}
+
+	private void addUserNameLabel(GridBagConstraints gbc) {
+		gbc.anchor = GridBagConstraints.NORTHWEST;
+		gbc.fill = GridBagConstraints.NONE;
+		gbc.gridheight = 1;
+		gbc.gridwidth = 1;
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		this.getContentPane().add(lblUserName, gbc);
+	}
+
+	private void addUserNameTextField(GridBagConstraints gbc) {
+		gbc.anchor = GridBagConstraints.NORTHWEST;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.gridheight = 1;
+		gbc.gridwidth = GridBagConstraints.REMAINDER;
+		gbc.gridx = 1;
+		gbc.gridy = 0;
+		gbc.weightx = 1.0;
+		this.getContentPane().add(txtUserName, gbc);
+	}
+
+	private void addPasswordLabel(GridBagConstraints gbc) {
+		gbc.anchor = GridBagConstraints.NORTHWEST;
+		gbc.fill = GridBagConstraints.NONE;
+		gbc.gridheight = 1;
+		gbc.gridwidth = 1;
+		gbc.gridx = 0;
+		gbc.gridy = 1;
+		this.getContentPane().add(lblPassword, gbc);
+	}
+
+	private void addPasswordField(GridBagConstraints gbc) {
+		gbc.anchor = GridBagConstraints.NORTHWEST;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.gridheight = 1;
+		gbc.gridwidth = GridBagConstraints.REMAINDER;
+		gbc.gridx = 1;
+		gbc.gridy = 1;
+		gbc.weightx = 1.0;
+		this.getContentPane().add(pswdPassword, gbc);
+	}
+
+	private void addSignUpButton(GridBagConstraints gbc) {
+		gbc.anchor = GridBagConstraints.NORTHWEST;
+		gbc.fill = GridBagConstraints.NONE;
+		gbc.gridheight = 1;
+		gbc.gridwidth = 1;
+		gbc.gridx = 0;
+		gbc.gridy = 2;
+		this.getContentPane().add(btnSignIn, gbc);
+	}
+	
+	private void addRegisterButton(GridBagConstraints gbc) {
+		gbc.anchor = GridBagConstraints.NORTHEAST;
+		gbc.fill = GridBagConstraints.NONE;
+		gbc.gridheight = 1;
+		gbc.gridwidth = 1;
+		gbc.gridx = 1;
+		gbc.gridy = 2;
+		this.getContentPane().add(btnRegister, gbc);
+	}
+
 }
