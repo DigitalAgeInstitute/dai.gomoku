@@ -3,7 +3,7 @@ package dai.gomoku.client.swing.requests;
 import dai.gomoku.client.swing.ClientController;
 
 public class RegisterRequest implements Request {
-	private String type = "REGISTER";
+	private String type = "REGISTERUSER";
 	private String firstName;
 	private String lastName;
 	private String email;
@@ -93,8 +93,11 @@ public class RegisterRequest implements Request {
 
 	@Override
 	public void request() {
-		// TODO Auto-generated method stub
-
+		String registerJSON = String
+				.format("{ \"type\":\"%s\", \"firstname\":\"%s\", \"lastname\":\"%s\", "
+						+ "\"email\":\"%s\", \"contacts\":\"%s\", \"password\":\"%s\" }",
+						type, firstName, lastName, email, phone, password);
+		controller.sendToServer(registerJSON);
 	}
 
 }

@@ -107,7 +107,7 @@ public class MakeMoveResponse implements Response {
 	@Override
 	public void process() {
 		if (status.equals(OK)) {
-			controller.markCell( row, col, username);
+			controller.markCell(gameID, row, col, username);
 		} else {
 			JOptionPane.showMessageDialog(null, "Sorry. That move is invalid.", "Invalid Move", JOptionPane.ERROR_MESSAGE);
 		}

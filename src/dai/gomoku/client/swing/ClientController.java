@@ -10,19 +10,19 @@ import java.util.concurrent.Executors;
 
 import javax.swing.JOptionPane;
 
-import dai.gomoku.game.core.HumanPlayer;
+import dai.gomoku.client.swing.requests.ChallengeRequest;
 import dai.gomoku.client.swing.requests.LoginRequest;
 import dai.gomoku.client.swing.requests.RegisterRequest;
+import dai.gomoku.game.core.HumanPlayer;
 
-public class ClientController implements LoginListener, RegisterListener {
+public class ClientController {
 	private Socket socket;
 
 	private String username;
-	private String password;
-
+	
 	private GomokuLogin loginScreen;
 	private RegisterWindow registerScreen;
-	private GomokuGUI gameWindow;
+	private GomokuGUI mainWindow;
 	private List<GameModel> games;
 
 	private PrintWriter writer;
@@ -39,21 +39,25 @@ public class ClientController implements LoginListener, RegisterListener {
 	public Socket getSocket() {
 		return socket;
 	}
+	
+	public String getUsername ( ) {
+		return username;
+	}
 
 	public void displayGameWindow() {
-		gameWindow.setVisible(true);
+		mainWindow.setVisible(true);
 	}
 
 	public void hideGameWindow() {
-		gameWindow.setVisible(true);
+		mainWindow.setVisible(true);
 	}
 
 	public void destroyGameWindow() {
-		gameWindow.dispose();
+		mainWindow.dispose();
 	}
 
 	public void populateList(List<HumanPlayer> players) {
-		gameWindow.populateList(players);
+		mainWindow.populateList(players);
 	}
 
 	public void displayLoginScreen() {
@@ -73,53 +77,66 @@ public class ClientController implements LoginListener, RegisterListener {
 	}
 
 	public void hideRegisterScreen() {
-		registerScreen.setVisible(true);
+		registerScreen.setVisible(false);
 	}
 
 	public void destroyRegisterScreen() {
 		registerScreen.dispose();
 	}
 
-	public void markCell(int row, int col, String username) {
+	public int displayChallengeDialog(String challengeeUsername) {
+		return JOptionPane.showConfirmDialog(mainWindow, challengeeUsername
+				+ " challenged you to a game. Accept?", "Take the Challenge",
+				JOptionPane.YES_NO_OPTION);
+	}
+
+	public void displayRejectDialog(String challengeeUsername) {
+		JOptionPane.showConfirmDialog(mainWindow, challengeeUsername
+				+ " rejected your challenge. Another time maybe.",
+				"Challenge Rejected", JOptionPane.OK_OPTION);
+	}
+
+	public void displayRegisterSuccessDialog() {
+		displayLoginScreen();
+		JOptionPane
+				.showMessageDialog(
+						loginScreen,
+						"You have been registered successfully.\nPlease login with your chosen username and password.",
+						"Registration Failed", JOptionPane.INFORMATION_MESSAGE);
+	}
+
+	public void displayRegisterFailDialog(String message) {
+		displayRegisterScreen();
+		JOptionPane.showMessageDialog(registerScreen, "Registration Failed:\n"
+				+ message, "Registration Failure", JOptionPane.ERROR_MESSAGE);
+	}
+
+	public void registerUser(RegisterRequest regReq ) {
+		regReq.request();
+	}
+	
+	public void signIn ( LoginRequest req ) {
+		this.username = req.getUsername();
+		req.request();
+	}
+	
+	public void challengeUser ( ChallengeRequest req ) {
+		req.request();
+	}
+
+	public void markCell(String gameID, int row, int col, String username) {
 		// TODO: Implement this correctly
 	}
 
-	@Override
-	public void getLoginDetails() {
-		getDetails();
-		if (inputComplete()) {
-			new LoginRequest(this, username, password).request();
-			password = null;
-		} else {
-			JOptionPane.showMessageDialog(loginScreen,
-					"Please fill in all the details", "Incomplete Input",
-					JOptionPane.ERROR_MESSAGE);
-			displayLoginScreen();
-		}
-	}
-
-	@Override
-	public void register() {
-		hideRegisterScreen();
-		RegisterRequest registerRequest = new RegisterRequest(this);
-		if (checkRegisterInput(registerRequest)) {
-			if (password.equals(registerScreen.getConfirmPassword())) {
-				registerRequest.request();
-			} else {
-				JOptionPane.showMessageDialog(registerScreen,
-						"The passwords you typed do not match",
-						"Password Mismatch", JOptionPane.ERROR_MESSAGE);
-				displayRegisterScreen();
-			}
-
-		} else {
-			JOptionPane.showConfirmDialog(gameWindow,
-					"Please fill in all the details", "Incomplete Input",
-					JOptionPane.ERROR_MESSAGE);
-		}
+	public void startNewGame(String gameID, String challenger, String challengee) {
+		GameModel game = new GameModel();
+		GameWindow boardUI = mainWindow.createGameWindow(gameID, challengee,
+				game);
+		game.addGameBoardChangeListener(boardUI);
 	}
 
 	public synchronized void sendToServer(String toSend) {
+		toSend = "\n[STARTJSON]\n" + toSend + "\n[ENDJSON]\n";
 		writer.write(toSend);
 		writer.flush();
 	}
@@ -136,29 +153,14 @@ public class ClientController implements LoginListener, RegisterListener {
 
 	private void initLoginScreen() {
 		loginScreen = new GomokuLogin(this);
-		loginScreen.registerGUIListener(this);
 	}
 
 	private void initRegisterScreen() {
-		registerScreen = new RegisterWindow();
+		registerScreen = new RegisterWindow(this);
 	}
 
 	private void initGameWindow() {
-		gameWindow = new GomokuGUI(games);
-	}
-
-	private void getDetails() {
-		this.username = loginScreen.getUsername();
-		this.password = loginScreen.getPassword();
-	}
-
-	private boolean inputComplete() {
-		if ((username != null) && (!username.equals("")) && (password != null)
-				&& (!password.equals(""))) {
-			return true;
-		} else {
-			return false;
-		}
+		mainWindow = new GomokuGUI(this, games);
 	}
 
 	private void initWriter() {
@@ -167,25 +169,6 @@ public class ClientController implements LoginListener, RegisterListener {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-
-	private boolean checkRegisterInput(RegisterRequest rr) {
-		getRegistrationDetails(rr);
-		if ((!rr.getFirstName().equals("")) && (!rr.getLastName().equals(""))
-				&& (!rr.getEmail().equals("")) && (!rr.getPhone().equals(""))
-				&& (!rr.getPassword().equals(""))) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	private void getRegistrationDetails(RegisterRequest rr) {
-		rr.setEmail(registerScreen.getEmail());
-		rr.setFirstName(registerScreen.getFirstName());
-		rr.setLastName(registerScreen.getLastName());
-		rr.setPassword(registerScreen.getPassword());
-		rr.setPhone(registerScreen.getPhone());
 	}
 
 	public static void main(String[] args) {

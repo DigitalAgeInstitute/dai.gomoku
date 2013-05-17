@@ -14,6 +14,8 @@ import javax.swing.JLabel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import dai.gomoku.client.swing.requests.LoginRequest;
+
 public class GomokuLogin extends JFrame implements GameModelListener,
 		ActionListener {
 	/**
@@ -27,63 +29,60 @@ public class GomokuLogin extends JFrame implements GameModelListener,
 
 	private JButton btnSignIn;
 	private JButton btnRegister;
-	
-	private ClientController controller;
-	
-	private List<LoginListener> listeners;
 
-	public GomokuLogin( ClientController controller ) {
+	private LoginRequest loginReq;
+
+	private ClientController controller;
+
+	public GomokuLogin(ClientController controller) {
 		this.controller = controller;
 		initComponents();
 		addComponents();
 		setJFrameProperties();
-		listeners = new ArrayList<LoginListener>();
 	}
-	
-	public String getUsername ( ) {
+
+	public String getUsername() {
 		return txtUserName.getText();
-	}
-	
-	public String getPassword ( ) {
-		String pass = "";
-		char [] passChar = pswdPassword.getPassword();
-		for ( int i = 0; i < passChar.length; i++ ) {
-			pass += passChar[i];
-		}
-		return pass;
-	}
-	
-	public void registerGUIListener ( LoginListener listener ) {
-		listeners.add(listener);
-	}
-	
-	public void deregisterGUIListener ( LoginListener listener ) {
-		if ( listeners.contains(listener) ) {
-			listeners.remove(listener);
-		}
 	}
 
 	@Override
 	public void update() {
 		// TODO: Get details from the model
 	}
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if ( e.getSource() == btnSignIn ) {
-			controller.hideLoginScreen();
-			notifyLoginListeners();
-		} else if ( e.getSource() == btnRegister ) {
+		if (e.getSource() == btnSignIn) {
+			if (isInputComplete()) {
+				controller.hideLoginScreen();
+				loginReq = new LoginRequest(controller, txtUserName.getText(),
+						getPassword());
+				controller.signIn( loginReq );
+			}
+		} else if (e.getSource() == btnRegister) {
 			controller.hideLoginScreen();
 			controller.displayRegisterScreen();
 		}
-		
+
 	}
-	
-	private void notifyLoginListeners ( ) {
-		for ( int i = 0; i < listeners.size(); i++ ) {
-			listeners.get(i).getLoginDetails();
+
+	private String getPassword() {
+		String pass = "";
+		char[] passChar = pswdPassword.getPassword();
+		for (int i = 0; i < passChar.length; i++) {
+			pass += passChar[i];
 		}
+		return pass;
+	}
+
+	private boolean isInputComplete() {
+		if ((txtUserName.getText() != null)
+				&& (!txtUserName.getText().equals(""))) {
+			if (pswdPassword.getPassword().length > 0) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private void initComponents() {
@@ -134,7 +133,7 @@ public class GomokuLogin extends JFrame implements GameModelListener,
 		btnSignIn = new JButton("Sign In");
 		btnSignIn.addActionListener(this);
 	}
-	
+
 	private void initRegisterButton() {
 		btnRegister = new JButton("Register");
 		btnRegister.addActionListener(this);
@@ -191,7 +190,7 @@ public class GomokuLogin extends JFrame implements GameModelListener,
 		gbc.gridy = 2;
 		this.getContentPane().add(btnSignIn, gbc);
 	}
-	
+
 	private void addRegisterButton(GridBagConstraints gbc) {
 		gbc.anchor = GridBagConstraints.NORTHEAST;
 		gbc.fill = GridBagConstraints.NONE;

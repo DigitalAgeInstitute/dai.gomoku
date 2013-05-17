@@ -20,6 +20,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
 
+import dai.gomoku.client.swing.requests.ChallengeRequest;
 import dai.gomoku.game.core.HumanPlayer;
 
 public class GomokuGUI extends JFrame implements ActionListener {
@@ -33,13 +34,15 @@ public class GomokuGUI extends JFrame implements ActionListener {
 	private JButton btnChallenge;
 	private JLabel lblStatusMessages;
 
-	public GomokuGUI(List<GameModel> games) {
+	private ClientController controller;
+
+	public GomokuGUI(ClientController controller, List<GameModel> games) {
+		this.controller = controller;
 		this.games = games;
 		gameWindows = new HashMap<String, GameWindow>();
 		initComponents();
 		addComponents();
 		setJFrameProperties();
-		createGameWindow("999", "julius");
 	}
 
 	public void populateList(List<HumanPlayer> players) {
@@ -52,19 +55,30 @@ public class GomokuGUI extends JFrame implements ActionListener {
 		lstPlayerUsernames.setListData(usernames);
 	}
 
-	public void createGameWindow(String gameID, String opponentUsername) {
-		GameWindow gameWindow = new GameWindow(gameID, opponentUsername);
+	public GameWindow createGameWindow(String gameID, String opponentUsername,
+			GameModel model) {
+		GameWindow gameWindow = new GameWindow(gameID, opponentUsername, model);
 		gameWindows.put(gameID, gameWindow);
 		gameWindow.setMaximizable(true);
 		gameWindow.setClosable(true);
 		gameWindow.setIconifiable(true);
 		gameWindow.setVisible(true);
 		leftSideDesktop.add(gameWindow);
+		return gameWindow;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
+		if (e.getSource() == btnChallenge) {
+			String challengee = lstPlayerUsernames.getSelectedValue();
+			if (challengee != null) {
+				ChallengeRequest req = new ChallengeRequest(controller);
+				req.setChallengeeUsername(challengee);
+				req.setChallengerUsername(controller.getUsername());
+				req.setMessage("MAKE");
+				controller.challengeUser(req);
+			}
+		}
 
 	}
 

@@ -25,9 +25,10 @@ public class LoginResponse implements Response {
 			controller.displayGameWindow();
 			controller.destroyLoginScreen();
 		} else {
-			// TODO: Display error message.
-			// TODO: Redisplay login screen
-			JOptionPane.showMessageDialog(null, "Login failed");
+			JOptionPane.showMessageDialog(null,
+					"We could not log you in to the system. Please check your username "
+							+ "and password and try again.", "Login failed",
+					JOptionPane.ERROR_MESSAGE);
 			controller.displayLoginScreen();
 		}
 	}

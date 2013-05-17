@@ -8,6 +8,10 @@ public class LoginRequest implements Request {
 	private String type = "LOGIN";
 	private String username;
 	private String password;
+	
+	public String getUsername ( ) {
+		return username;
+	}
 
 	public LoginRequest(ClientController controller, String username,
 			String password) {
@@ -21,8 +25,7 @@ public class LoginRequest implements Request {
 		String jsonString = String
 				.format("{ \"type\":\"%s\", \"username\":\"%s\", \"password\":\"%s\" }",
 						type, username, password);
-		controller.sendToServer("\n[STARTJSON]\n" + jsonString
-				+ "\n[ENDJSON]\n");
+		controller.sendToServer(jsonString);
 	}
 
 }
