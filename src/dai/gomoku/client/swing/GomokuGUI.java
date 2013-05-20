@@ -18,6 +18,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.ListSelectionModel;
 import javax.swing.border.BevelBorder;
 
 import dai.gomoku.client.swing.requests.ChallengeRequest;
@@ -52,12 +53,13 @@ public class GomokuGUI extends JFrame implements ActionListener {
 		for (int i = 0; i < players.size(); i++) {
 			usernames[i] = players.get(i).getUserName();
 		}
+		lstPlayerUsernames.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		lstPlayerUsernames.setListData(usernames);
 	}
 
 	public GameWindow createGameWindow(String gameID, String opponentUsername,
 			GameModel model) {
-		GameWindow gameWindow = new GameWindow(gameID, opponentUsername, model);
+		GameWindow gameWindow = new GameWindow(controller, gameID, opponentUsername, model);
 		gameWindows.put(gameID, gameWindow);
 		gameWindow.setMaximizable(true);
 		gameWindow.setClosable(true);
@@ -150,6 +152,7 @@ public class GomokuGUI extends JFrame implements ActionListener {
 
 	private void initLstPlayerUsernames() {
 		lstPlayerUsernames = new JList<String>();
+		lstPlayerUsernames.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		lstPlayerUsernames.setListData(new String[] {});
 	}
 

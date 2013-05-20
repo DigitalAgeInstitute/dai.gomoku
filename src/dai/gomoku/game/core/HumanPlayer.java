@@ -188,8 +188,9 @@ public class HumanPlayer implements Player {
 	 */
 	@Override
 	public String toString() {
-		return "HumanPlayer [playerID=" + userID + ", userName=" + userName
-				+ ", firstName=" + firstName + ", lastName=" + lastName + "]";
+		return "HumanPlayer [userID=" + userID + ", userName=" + userName
+				+ ", firstName=" + firstName + ", lastName=" + lastName
+				+ ", email=" + email + ", contacts=" + contacts + "]";
 	}
 
 	@Override

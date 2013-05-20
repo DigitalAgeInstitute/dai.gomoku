@@ -5,7 +5,6 @@ import java.util.List;
 import com.google.gson.annotations.SerializedName;
 
 import dai.gomoku.game.core.HumanPlayer;
-import dai.gomoku.game.core.Player;
 
 public class ResponseWrapper {
 	@SerializedName("type")
@@ -32,6 +31,21 @@ public class ResponseWrapper {
 	@SerializedName("players")
 	private List<HumanPlayer> players;
 
+	@SerializedName("challengerUsername")
+	private String challengerUsername;
+
+	@SerializedName("challengeeUsername")
+	private String challengeeUsername;
+
+	@SerializedName("message")
+	private String message;
+
+	@SerializedName("winner")
+	private String winner;
+
+	/*
+	 * Getter methods
+	 */
 	public String getType() {
 		return type;
 	}
@@ -85,11 +99,47 @@ public class ResponseWrapper {
 		return players;
 	}
 
+	/**
+	 * @return the challengerUsername
+	 */
+	public String getChallengerUsername() {
+		return challengerUsername;
+	}
+
+	/**
+	 * @return the challengeeUsername
+	 */
+	public String getChallengeeUsername() {
+		return challengeeUsername;
+	}
+
+	/**
+	 * @return the message
+	 */
+	public String getMessage() {
+		return message;
+	}
+
+	/**
+	 * @return the winner
+	 */
+	public String getWinner() {
+		return winner;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
 		return "ResponseWrapper [type=" + type + ", username=" + username
-				+ ", state=" + state + ", gameID=" + gameID + ", row=" + row
-				+ ", col=" + col + "]";
+				+ ", state=" + state + ", status=" + status + ", gameID="
+				+ gameID + ", row=" + row + ", col=" + col + ", players="
+				+ players + ", challengerUsername=" + challengerUsername
+				+ ", challengeeUsername=" + challengeeUsername + ", message="
+				+ message + ", winner=" + winner + "]";
 	}
 
 }

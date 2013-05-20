@@ -27,6 +27,9 @@ public class ChallengeResponse implements Response {
 	 * @param gameID
 	 *            the gameID to set
 	 */
+	/**
+	 * @param gameID
+	 */
 	public void setGameID(String gameID) {
 		this.gameID = gameID;
 	}
@@ -34,7 +37,7 @@ public class ChallengeResponse implements Response {
 	@Override
 	public String toJSONString() {
 		return String
-				.format("{ \"type\":\"%s\", \"challenger\":\"%s\", \"challengee\":\"%s\", \"gameID\":\"%s\", \"message\":\"%s\" }",
+				.format("{ \"type\":\"%s\", \"challengerUsername\":\"%s\", \"challengeeUsername\":\"%s\", \"gameID\":\"%s\", \"message\":\"%s\" }",
 						type, challengerUsername, challengeeUsername, gameID,
 						message);
 	}

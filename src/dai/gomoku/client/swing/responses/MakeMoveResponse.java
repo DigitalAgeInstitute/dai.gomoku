@@ -6,8 +6,6 @@ import dai.gomoku.client.Response;
 import dai.gomoku.client.swing.ClientController;
 
 public class MakeMoveResponse implements Response {
-	public static final String OK = "OK";
-	public static final String FAIL = "FAIL";
 
 	private String type = "MAKEMOVE";
 	private String status;
@@ -15,9 +13,8 @@ public class MakeMoveResponse implements Response {
 	private String username;
 	private int row;
 	private int col;
-	
-	ClientController controller;
-	
+
+	private ClientController controller;
 
 	public MakeMoveResponse(String status, String gameID, String username,
 			int row, int col, ClientController controller) {
@@ -106,10 +103,12 @@ public class MakeMoveResponse implements Response {
 
 	@Override
 	public void process() {
-		if (status.equals(OK)) {
+		if (status.equals("OK")) {
 			controller.markCell(gameID, row, col, username);
 		} else {
-			JOptionPane.showMessageDialog(null, "Sorry. That move is invalid.", "Invalid Move", JOptionPane.ERROR_MESSAGE);
+			if (username.equals(controller.getUsername())) {
+				controller.displayMoveFailedDialog();
+			}
 		}
 	}
 

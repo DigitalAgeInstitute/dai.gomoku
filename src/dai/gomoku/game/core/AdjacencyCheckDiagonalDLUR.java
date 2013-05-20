@@ -36,22 +36,22 @@ public class AdjacencyCheckDiagonalDLUR implements AdjacencyCheck {
 		}
 		return present;
 	}
-	
+
 	@Override
-	public boolean hasWinner ( ) {
+	public boolean hasWinner() {
 		return hasWinner;
 	}
-	
+
 	@Override
-	public Player getWinner ( int win_size ) {
+	public Player getWinner(int win_size) {
 		return winner;
 	}
-	
-	private Player retrieveWinner ( int index ) {
+
+	private Player retrieveWinner(int index) {
 		Iterator<Cell> it = dlurAdjacencies.get(index).iterator();
-		Player toReturn = null ;
-		for ( ; it.hasNext(); ) {
-			toReturn = ((Cell)it.next()).getCellOwner();
+		Player toReturn = null;
+		for (; it.hasNext();) {
+			toReturn = ((Cell) it.next()).getCellOwner();
 			break;
 		}
 		return toReturn;
@@ -136,6 +136,17 @@ public class AdjacencyCheckDiagonalDLUR implements AdjacencyCheck {
 		for (int i = 0; i < toRemove.size(); i++) {
 			dlurAdjacencies.remove(toRemove.get(i));
 		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "AdjacencyCheckDiagonalDLUR [dlurAdjacencies=" + dlurAdjacencies
+				+ "]";
 	}
 
 }

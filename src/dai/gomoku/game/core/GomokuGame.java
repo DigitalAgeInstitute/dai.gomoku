@@ -59,6 +59,36 @@ public class GomokuGame {
 		this.gameID = gameID;
 	}
 
+	/**
+	 * @return the player1
+	 */
+	public Player getPlayer1() {
+		return player1;
+	}
+
+	/**
+	 * @param player1
+	 *            the player1 to set
+	 */
+	public void setPlayer1(Player player1) {
+		this.player1 = player1;
+	}
+
+	/**
+	 * @return the player2
+	 */
+	public Player getPlayer2() {
+		return player2;
+	}
+
+	/**
+	 * @param player2
+	 *            the player2 to set
+	 */
+	public void setPlayer2(Player player2) {
+		this.player2 = player2;
+	}
+
 	public void markCell(Player player, int row, int col)
 			throws CellOwnershipException {
 		if (!isGameOver()) {
@@ -66,16 +96,20 @@ public class GomokuGame {
 				if (player.equals(player1)) {
 					board.getCellByPosition(row, col).setCellOwner(player);
 					toggleTurn();
+				} else {
+					throw new CellOwnershipException("Not your turn");
 				}
 			} else {
 				if (player.equals(player2)) {
 					board.getCellByPosition(row, col).setCellOwner(player);
 					toggleTurn();
+				} else {
+					throw new CellOwnershipException("Not your turn");
 				}
 			}
+			checkForWin();
 		}
 
-		checkForWin();
 	}
 
 	public Player getWinner() {
@@ -127,6 +161,11 @@ public class GomokuGame {
 			gameOver = true;
 			findAndSetWinner();
 		}
+
+		System.out.println("\tup-down:" + upDownAdjacency);
+		System.out.println("\tleft-right:" + leftRightAdjacency);
+		System.out.println("\tupleft-downright:" + uldrAdjacency);
+		System.out.println("\tdownLeft-upRight:" + dlurAdjacency);
 	}
 
 	private void findAndSetWinner() {

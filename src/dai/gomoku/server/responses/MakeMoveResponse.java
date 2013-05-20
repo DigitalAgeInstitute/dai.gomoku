@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+import dai.gomoku.game.core.GomokuGame;
+import dai.gomoku.game.core.Player;
 import dai.gomoku.server.Response;
 
 public class MakeMoveResponse implements Response {
@@ -123,10 +125,21 @@ public class MakeMoveResponse implements Response {
 	@Override
 	public synchronized void respond(Socket socket) {
 		try {
-			PrintWriter writer = new PrintWriter( socket.getOutputStream() );
-			writer.write( "\n[STARTJSON]\n" + toJSONString() + "\n[ENDJSON]\n" );
-			writer.flush();
-		} catch ( IOException ioe ) {
+			// TODO: Refactor this and clean it up...
+			GomokuGame game = ResponseUtil.getGameByID(
+					ResponseUtil.getPlayer(username), gameID);
+			Player player1 = game.getPlayer1();
+			Player player2 = game.getPlayer2();
+
+			PrintWriter writer1 = new PrintWriter(player1.getPlayerThread()
+					.getClientSocket().getOutputStream());
+			PrintWriter writer2 = new PrintWriter(player2.getPlayerThread()
+					.getClientSocket().getOutputStream());
+			writer1.write("\n[STARTJSON]\n" + toJSONString() + "\n[ENDJSON]\n");
+			writer2.write("\n[STARTJSON]\n" + toJSONString() + "\n[ENDJSON]\n");
+			writer1.flush();
+			writer2.flush();
+		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
 	}

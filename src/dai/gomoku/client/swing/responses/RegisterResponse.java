@@ -4,7 +4,6 @@ import dai.gomoku.client.Response;
 import dai.gomoku.client.swing.ClientController;
 
 public class RegisterResponse implements Response {
-	private String type = "REGISTERUSER";
 	private String status;
 	private String message;
 

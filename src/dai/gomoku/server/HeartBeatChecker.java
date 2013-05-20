@@ -67,7 +67,7 @@ public class HeartBeatChecker implements Runnable {
 				} catch (IOException e) {
 					if (timeouts.containsKey(playerThread)) {
 						int count = timeouts.get(playerThread);
-						if (count >= 6) {
+						if (count >= 5) {
 							playerThread.stop();
 							it.remove();
 						} else {
@@ -81,8 +81,8 @@ public class HeartBeatChecker implements Runnable {
 			}
 
 			try {
-				/* Sleep for 5 minutes */
-				Thread.sleep(18000000);
+				/* Sleep for 1 minute */
+				Thread.sleep(60000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

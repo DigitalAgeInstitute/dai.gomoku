@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.google.gson.Gson;
@@ -107,10 +108,10 @@ public class JSONRequestHandler implements Runnable, GameWinListener {
 						// TODO: Create appropriate Request object
 						Request request = RequestFactory
 								.buildRequestFromWrapper(wrapper, this);
-						System.out.println("REQUEST ==> " + request);
+						// System.out.println("REQUEST ==> " + request);
 						// TODO: Process the request to get a response
 						Response response = request.process();
-						System.out.println("RESPONSE ==> " + response);
+						// System.out.println("RESPONSE ==> " + response);
 
 						// TODO: (synchronized)Send the response to the
 						// client
@@ -127,6 +128,7 @@ public class JSONRequestHandler implements Runnable, GameWinListener {
 		}
 
 		releaseResources();
+		removePlayer();
 		System.out.println("Client Handler died... We shall miss her.");
 	}
 
@@ -141,6 +143,18 @@ public class JSONRequestHandler implements Runnable, GameWinListener {
 			closeSocket();
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
+		}
+	}
+
+	private synchronized void removePlayer() {
+		List<Player> players = AvailablePlayersList.getInstance()
+				.getAvailablePlayersList();
+		for (int i = 0; i < players.size(); i++) {
+			if (players.get(i).getPlayerThread().equals(this)) {
+				AvailablePlayersList.getInstance().removePlayerFromList(
+						players.get(i));
+				break;
+			}
 		}
 	}
 

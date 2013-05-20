@@ -55,7 +55,11 @@ public class ResponseHandler implements Runnable {
 								ResponseWrapper.class);
 						Response response = ResponseFactory
 								.buildResponseFromWrapper(wrapper, controller);
+						try {
 						response.process();
+						} catch (NullPointerException npe) {
+							npe.printStackTrace();
+						}
 					}
 				}
 
@@ -63,8 +67,6 @@ public class ResponseHandler implements Runnable {
 
 		} catch (IOException e) {
 			e.printStackTrace();
-		} catch (NullPointerException npe) {
-			npe.printStackTrace();
 		}
 
 	}

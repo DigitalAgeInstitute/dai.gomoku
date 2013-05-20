@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Cell {
 	private BoardPosition boardPosition;
-	private Player cellOwner;
+	private Player cellOwner = null;
 	private ArrayList<CellChangeObserver> cellChangeObservers;
 
 	public Cell(BoardPosition position) {
@@ -122,8 +122,7 @@ public class Cell {
 	@Override
 	public String toString() {
 		return "Cell [boardPosition=" + boardPosition + ", cellOwner="
-				+ cellOwner + ", cellChangeObservers=" + cellChangeObservers
-				+ "]";
+				+ cellOwner + ", cellChangeObservers=" + "]";
 	}
 
 }

@@ -5,6 +5,7 @@ import dai.gomoku.game.core.GomokuGame;
 import dai.gomoku.game.core.Player;
 import dai.gomoku.server.Request;
 import dai.gomoku.server.Response;
+import dai.gomoku.server.responses.GameOverResponse;
 import dai.gomoku.server.responses.MakeMoveResponse;
 import dai.gomoku.server.responses.ResponseUtil;
 
@@ -92,14 +93,28 @@ public class MakeMoveRequest implements Request {
 	@Override
 	public Response process() {
 		Player player = ResponseUtil.getPlayer(username);
-		GomokuGame game = ResponseUtil.getGameByID( player, gameID );
+		GomokuGame game = ResponseUtil.getGameByID(player, gameID);
 		try {
-			game.markCell(player, row, col);
-			return new MakeMoveResponse(MakeMoveResponse.OK, gameID, username, row, col);
+			if (game.isGameOver()) {
+				return new GameOverResponse(game.getGameID(), game.getWinner()
+						.getUserName());
+			} else {
+				game.markCell(player, row, col);
+				if ( game.isGameOver() ) {
+					GameOverResponse gameOver = new GameOverResponse(game.getGameID(), game.getWinner()
+							.getUserName());
+					gameOver.respond(game.getPlayer1().getPlayerThread().getClientSocket());
+					gameOver.respond(game.getPlayer2().getPlayerThread().getClientSocket());
+				}
+				return new MakeMoveResponse(MakeMoveResponse.OK, gameID,
+						username, row, col);
+			}
+
 		} catch (CellOwnershipException e) {
-			return new MakeMoveResponse(MakeMoveResponse.FAIL, gameID, username, row, col);
+			return new MakeMoveResponse(MakeMoveResponse.FAIL, gameID,
+					username, row, col);
 		}
-		
+
 	}
 
 	/*

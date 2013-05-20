@@ -11,14 +11,20 @@ import java.util.List;
  */
 public class GameModel {
 	private String gameID;
-	private String playerX;
 	private String playerO;
+	private String playerX;
 
 	private final int BOARD_SIZE = 15;
 	private char[][] gameBoard;
+	private boolean gameOver = false;
 	private List<GameBoardChangeListener> gameBoardChangeListeners;
 
-	public GameModel() {
+	private String winner;
+
+	public GameModel(String gameID, String playerO, String playerX) {
+		this.gameID = gameID;
+		this.playerO = playerO;
+		this.playerX = playerX;
 		initCells();
 		gameBoardChangeListeners = new ArrayList<GameBoardChangeListener>();
 	}
@@ -51,6 +57,13 @@ public class GameModel {
 		return gameBoard;
 	}
 
+	/**
+	 * @return the bOARD_SIZE
+	 */
+	public int getBoardSize() {
+		return BOARD_SIZE;
+	}
+
 	public void addGameBoardChangeListener(GameBoardChangeListener listener) {
 		gameBoardChangeListeners.add(listener);
 	}
@@ -68,6 +81,36 @@ public class GameModel {
 			gameBoard[row][col] = 'X';
 		}
 		notifyGameBoardChangeListeners();
+	}
+
+	/**
+	 * @return the gameOver
+	 */
+	public boolean isGameOver() {
+		return gameOver;
+	}
+
+	/**
+	 * @param gameOver
+	 *            the gameOver to set
+	 */
+	public void setGameOver(boolean gameOver) {
+		this.gameOver = gameOver;
+	}
+
+	/**
+	 * @return the winner
+	 */
+	public String getWinner() {
+		return winner;
+	}
+
+	/**
+	 * @param winner
+	 *            the winner to set
+	 */
+	public void setWinner(String winner) {
+		this.winner = winner;
 	}
 
 	private void initCells() {

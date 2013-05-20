@@ -40,30 +40,30 @@ public class AdjacencyCheckLeftRight implements AdjacencyCheck {
 				break;
 			}
 		}
-		
+
 		return present;
 	}
-	
+
 	@Override
-	public boolean hasWinner ( ) {
+	public boolean hasWinner() {
 		return hasWinner;
 	}
-	
+
 	@Override
-	public Player getWinner ( int win_size ) {
+	public Player getWinner(int win_size) {
 		return winner;
 	}
-	
-	private Player retrieveWinner ( int index ) {
+
+	private Player retrieveWinner(int index) {
 		Iterator<Cell> it = leftRightAdjacencies.get(index).iterator();
-		Player toReturn = null ;
-		for ( ; it.hasNext(); ) {
-			toReturn = ((Cell)it.next()).getCellOwner();
+		Player toReturn = null;
+		for (; it.hasNext();) {
+			toReturn = ((Cell) it.next()).getCellOwner();
 			break;
 		}
 		return toReturn;
 	}
-	
+
 	private void registerWithCells() {
 		int boardSize = board.getSize();
 		for (int row = 0; row < boardSize; row++) {
@@ -139,8 +139,19 @@ public class AdjacencyCheckLeftRight implements AdjacencyCheck {
 
 	private void removeSubSets(List<Set<Cell>> toRemove) {
 		for (int i = 0; i < toRemove.size(); i++) {
-			leftRightAdjacencies.remove( toRemove.get(i) );
+			leftRightAdjacencies.remove(toRemove.get(i));
 		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "AdjacencyCheckLeftRight [leftRightAdjacencies="
+				+ leftRightAdjacencies + "]";
 	}
 
 }
