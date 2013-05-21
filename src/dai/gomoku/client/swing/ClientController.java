@@ -192,7 +192,7 @@ public class ClientController {
 	}
 
 	private void initGameWindow() {
-		mainWindow = new GomokuGUI(this, games);
+		mainWindow = new GomokuGUI(this);
 	}
 
 	private void initWriter() {

@@ -25,7 +25,10 @@ import dai.gomoku.client.swing.requests.ChallengeRequest;
 import dai.gomoku.game.core.HumanPlayer;
 
 public class GomokuGUI extends JFrame implements ActionListener {
-	private List<GameModel> games;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2113477239280249362L;
 	private Map<String, GameWindow> gameWindows;
 
 	private JDesktopPane leftSideDesktop;
@@ -37,9 +40,8 @@ public class GomokuGUI extends JFrame implements ActionListener {
 
 	private ClientController controller;
 
-	public GomokuGUI(ClientController controller, List<GameModel> games) {
+	public GomokuGUI(ClientController controller) {
 		this.controller = controller;
-		this.games = games;
 		gameWindows = new HashMap<String, GameWindow>();
 		initComponents();
 		addComponents();
@@ -53,13 +55,15 @@ public class GomokuGUI extends JFrame implements ActionListener {
 		for (int i = 0; i < players.size(); i++) {
 			usernames[i] = players.get(i).getUserName();
 		}
-		lstPlayerUsernames.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		lstPlayerUsernames
+				.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		lstPlayerUsernames.setListData(usernames);
 	}
 
 	public GameWindow createGameWindow(String gameID, String opponentUsername,
 			GameModel model) {
-		GameWindow gameWindow = new GameWindow(controller, gameID, opponentUsername, model);
+		GameWindow gameWindow = new GameWindow(controller, gameID,
+				opponentUsername, model);
 		gameWindows.put(gameID, gameWindow);
 		gameWindow.setMaximizable(true);
 		gameWindow.setClosable(true);
@@ -152,7 +156,8 @@ public class GomokuGUI extends JFrame implements ActionListener {
 
 	private void initLstPlayerUsernames() {
 		lstPlayerUsernames = new JList<String>();
-		lstPlayerUsernames.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		lstPlayerUsernames
+				.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		lstPlayerUsernames.setListData(new String[] {});
 	}
 

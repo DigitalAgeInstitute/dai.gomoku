@@ -19,6 +19,11 @@ import javax.swing.text.JTextComponent;
 import dai.gomoku.client.swing.requests.RegisterRequest;
 
 public class RegisterWindow extends JFrame implements ActionListener {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3038151033074500661L;
+
 	private final int DEFAULT_TEXT_FIELD_LENGTH = 20;
 
 	private JLabel lblFirstName;

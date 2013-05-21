@@ -1,7 +1,5 @@
 package dai.gomoku.client.swing.responses;
 
-import javax.swing.JOptionPane;
-
 import dai.gomoku.client.Response;
 import dai.gomoku.client.swing.ClientController;
 

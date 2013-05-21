@@ -3,7 +3,6 @@ package dai.gomoku.server.requests;
 import java.sql.SQLException;
 
 import dai.gomoku.game.core.Player;
-import dai.gomoku.server.AvailablePlayersList;
 import dai.gomoku.server.DBUtils;
 import dai.gomoku.server.JSONRequestHandler;
 import dai.gomoku.server.Request;
