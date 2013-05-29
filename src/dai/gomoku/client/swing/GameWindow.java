@@ -2,6 +2,12 @@ package dai.gomoku.client.swing;
 
 import javax.swing.JInternalFrame;
 
+/**
+ * This class provides the play area for the the swing applications
+ * 
+ * @author Muriithi Frederick Muriuki
+ *
+ */
 public class GameWindow extends JInternalFrame implements
 		GameBoardChangeListener {
 	private static final long serialVersionUID = 6028423532504626449L;
