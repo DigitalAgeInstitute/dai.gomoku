@@ -78,7 +78,7 @@ public class RegisterUserRequest implements Request {
 
 	@Override
 	public Response process() {
-		HumanPlayer player = new HumanPlayer("", username, firstName, lastName);
+		HumanPlayer player = new HumanPlayer(0, username, firstName, lastName);
 		player.setEmail(email);
 		player.setContacts(contacts);
 		try {

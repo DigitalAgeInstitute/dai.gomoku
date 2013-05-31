@@ -8,10 +8,10 @@ import dai.gomoku.server.Response;
 
 public class GameOverResponse implements Response {
 	private final String type = "GAMEOVER";
-	private String gameID;
+	private long gameID;
 	private String winner;
 
-	public GameOverResponse(String gameID, String winner) {
+	public GameOverResponse(long gameID, String winner) {
 		this.gameID = gameID;
 		this.winner = winner;
 	}

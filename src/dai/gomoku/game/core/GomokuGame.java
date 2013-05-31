@@ -1,7 +1,10 @@
 package dai.gomoku.game.core;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import dai.gomoku.server.DBUtils;
 
 /**
  * This is the game itself. As is, it's like a state machine of sorts, that
@@ -13,7 +16,7 @@ import java.util.List;
 public class GomokuGame {
 	private static int WIN_NUM = 5;
 
-	private String gameID;
+	private long gameID;
 	private Board board;
 	private Player player1;
 	private Player player2;
@@ -32,7 +35,6 @@ public class GomokuGame {
 	private Player winner;
 
 	public GomokuGame(int boardSize, Player player1, Player player2) {
-		this.gameID = "GM:" + System.currentTimeMillis();
 		this.board = new Board(boardSize);
 		this.player1 = player1;
 		this.player2 = player2;
@@ -47,7 +49,7 @@ public class GomokuGame {
 	/**
 	 * @return the gameID
 	 */
-	public String getGameID() {
+	public long getGameID() {
 		return gameID;
 	}
 
@@ -55,7 +57,7 @@ public class GomokuGame {
 	 * @param gameID
 	 *            the gameID to set
 	 */
-	public void setGameID(String gameID) {
+	public void setGameID(long gameID) {
 		this.gameID = gameID;
 	}
 
@@ -106,6 +108,12 @@ public class GomokuGame {
 				} else {
 					throw new CellOwnershipException("Not your turn");
 				}
+			}
+			
+			try {
+				DBUtils.saveMove(getGameID(), player.getUserID(), row, col);
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
 			checkForWin();
 		}

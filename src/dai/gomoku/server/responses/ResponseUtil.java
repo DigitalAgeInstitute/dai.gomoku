@@ -17,7 +17,7 @@ public class ResponseUtil {
 		return AvailablePlayersList.getInstance().getPlayerByUsername(username);
 	}
 	
-	public static GomokuGame getGameByID ( Player player, String gameID ) {
+	public static GomokuGame getGameByID ( Player player, long gameID ) {
 		return player.getPlayerThread().getGameByID(gameID);
 	}
 }

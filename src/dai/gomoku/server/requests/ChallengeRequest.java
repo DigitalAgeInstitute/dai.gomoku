@@ -8,6 +8,7 @@ public class ChallengeRequest implements Request {
 	public static final String MAKE = "MAKE";
 	public static final String ACCEPT = "ACCEPT";
 	public static final String REJECT = "REJECT";
+	public static final String FAIL = "FAIL";
 
 	private String type = "CHALLENGE";
 	private String challengerUsername;

@@ -25,13 +25,13 @@ public class JSONRequestHandler implements Runnable, GameWinListener {
 	private InputStream inputFromClient;
 	private OutputStream outputToClient;
 
-	private Map<String, GomokuGame> games;
+	private Map<Long, GomokuGame> games;
 
 	private boolean stopped = false;
 
 	public JSONRequestHandler(Socket clientSocket) throws IOException {
 		this.clientSocket = clientSocket;
-		games = new HashMap<String, GomokuGame>();
+		games = new HashMap<Long, GomokuGame>();
 		initIO();
 	}
 
@@ -50,7 +50,7 @@ public class JSONRequestHandler implements Runnable, GameWinListener {
 		this.clientSocket = clientSocket;
 	}
 
-	public void addGame(String gameID, GomokuGame game) {
+	public void addGame(long gameID, GomokuGame game) {
 		this.games.put(gameID, game);
 	}
 
@@ -60,7 +60,7 @@ public class JSONRequestHandler implements Runnable, GameWinListener {
 		}
 	}
 
-	public GomokuGame getGameByID(String gameID) {
+	public GomokuGame getGameByID(long gameID) {
 		return this.games.get(gameID);
 	}
 

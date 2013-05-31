@@ -14,12 +14,12 @@ public class MakeMoveResponse implements Response {
 
 	private String type = "MAKEMOVE";
 	private String status;
-	private String gameID;
+	private long gameID;
 	private String username;
 	private int row;
 	private int col;
 
-	public MakeMoveResponse(String status, String gameID, String username,
+	public MakeMoveResponse(String status, long gameID, String username,
 			int row, int col) {
 		this.status = status;
 		this.gameID = gameID;
@@ -46,7 +46,7 @@ public class MakeMoveResponse implements Response {
 	/**
 	 * @return the gameID
 	 */
-	public String getGameID() {
+	public long getGameID() {
 		return gameID;
 	}
 
@@ -54,7 +54,7 @@ public class MakeMoveResponse implements Response {
 	 * @param gameID
 	 *            the gameID to set
 	 */
-	public void setGameID(String gameID) {
+	public void setGameID(long gameID) {
 		this.gameID = gameID;
 	}
 

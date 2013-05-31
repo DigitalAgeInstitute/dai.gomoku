@@ -29,7 +29,7 @@ public class RequestWrapper {
 	private String password;
 
 	@SerializedName("gameID")
-	private String gameID;
+	private long gameID;
 
 	@SerializedName("row")
 	private int row;
@@ -83,7 +83,7 @@ public class RequestWrapper {
 	/**
 	 * @return the gameID
 	 */
-	public String getGameID() {
+	public long getGameID() {
 		return gameID;
 	}
 

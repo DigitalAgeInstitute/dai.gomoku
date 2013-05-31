@@ -15,6 +15,12 @@ public interface Player {
 	 * @return
 	 */
 	public String getUserName();
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public long getUserID();
 
 	/**
 	 * 

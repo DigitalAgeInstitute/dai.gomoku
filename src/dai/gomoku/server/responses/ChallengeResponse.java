@@ -3,9 +3,11 @@ package dai.gomoku.server.responses;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.sql.SQLException;
 
 import dai.gomoku.game.core.GomokuGame;
 import dai.gomoku.game.core.Player;
+import dai.gomoku.server.DBUtils;
 import dai.gomoku.server.Response;
 import dai.gomoku.server.requests.ChallengeRequest;
 
@@ -14,7 +16,7 @@ public class ChallengeResponse implements Response {
 	private String challengerUsername;
 	private String challengeeUsername;
 	private String message;
-	private String gameID;
+	private long gameID;
 
 	public ChallengeResponse(String challengerUsername,
 			String challengeeUsername, String message) {
@@ -30,7 +32,7 @@ public class ChallengeResponse implements Response {
 	/**
 	 * @param gameID
 	 */
-	public void setGameID(String gameID) {
+	public void setGameID(long gameID) {
 		this.gameID = gameID;
 	}
 
@@ -51,10 +53,19 @@ public class ChallengeResponse implements Response {
 				Player challenger = ResponseUtil.getPlayer(challengerUsername);
 				Player challengee = ResponseUtil.getPlayer(challengeeUsername);
 				GomokuGame game = new GomokuGame(15, challenger, challengee);
-				challenger.getPlayerThread().addGame(game.getGameID(), game);
-				challengee.getPlayerThread().addGame(game.getGameID(), game);
-				this.gameID = game.getGameID();
-				sendTo(challengeeUsername);
+				
+				//this.gameID = game.getGameID();
+				try {
+					this.gameID = DBUtils.saveNewGame(game);
+					challenger.getPlayerThread().addGame(game.getGameID(), game);
+					challengee.getPlayerThread().addGame(game.getGameID(), game);
+					sendTo(challengeeUsername);
+				} catch (SQLException e) {
+					message = ChallengeRequest.FAIL;
+					sendTo(challengeeUsername);
+					e.printStackTrace();
+				}
+				
 			}
 			sendTo(challengerUsername);
 		}

@@ -1,8 +1,11 @@
 package dai.gomoku.server.requests;
 
+import java.sql.SQLException;
+
 import dai.gomoku.game.core.CellOwnershipException;
 import dai.gomoku.game.core.GomokuGame;
 import dai.gomoku.game.core.Player;
+import dai.gomoku.server.DBUtils;
 import dai.gomoku.server.Request;
 import dai.gomoku.server.Response;
 import dai.gomoku.server.responses.GameOverResponse;
@@ -11,12 +14,12 @@ import dai.gomoku.server.responses.ResponseUtil;
 
 public class MakeMoveRequest implements Request {
 	private String type = "MAKEMOVE";
-	private String gameID;
+	private long gameID;
 	private String username;
 	private int row;
 	private int col;
 
-	public MakeMoveRequest(String gameID, String username, int row, int col) {
+	public MakeMoveRequest(long gameID, String username, int row, int col) {
 		this.gameID = gameID;
 		this.username = username;
 		this.row = row;
@@ -26,7 +29,7 @@ public class MakeMoveRequest implements Request {
 	/**
 	 * @return the gameID
 	 */
-	public String getGameID() {
+	public long getGameID() {
 		return gameID;
 	}
 
@@ -34,7 +37,7 @@ public class MakeMoveRequest implements Request {
 	 * @param gameID
 	 *            the gameID to set
 	 */
-	public void setGameID(String gameID) {
+	public void setGameID(long gameID) {
 		this.gameID = gameID;
 	}
 
@@ -96,6 +99,7 @@ public class MakeMoveRequest implements Request {
 		GomokuGame game = ResponseUtil.getGameByID(player, gameID);
 		try {
 			if (game.isGameOver()) {
+				
 				return new GameOverResponse(game.getGameID(), game.getWinner()
 						.getUserName());
 			} else {
@@ -105,6 +109,11 @@ public class MakeMoveRequest implements Request {
 							.getUserName());
 					gameOver.respond(game.getPlayer1().getPlayerThread().getClientSocket());
 					gameOver.respond(game.getPlayer2().getPlayerThread().getClientSocket());
+					try {
+						DBUtils.markGameComplete(game);
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
 				}
 				return new MakeMoveResponse(MakeMoveResponse.OK, gameID,
 						username, row, col);

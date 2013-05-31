@@ -3,16 +3,16 @@ package dai.gomoku.game.core;
 import dai.gomoku.server.JSONRequestHandler;
 
 public class HumanPlayer implements Player {
-	private String userID;
+	private long userID;
 	private String userName;
 	private String firstName;
 	private String lastName;
 	private String email;
-	private String contacts;
+	private String phone;
 
 	private JSONRequestHandler playerThread;
 
-	public HumanPlayer(String userID, String userName, String firstName,
+	public HumanPlayer(long userID, String userName, String firstName,
 			String lastName) {
 		this.userID = userID;
 		this.userName = userName;
@@ -23,7 +23,7 @@ public class HumanPlayer implements Player {
 	/**
 	 * @return the playerID
 	 */
-	public String getUserID() {
+	public long getUserID() {
 		return userID;
 	}
 
@@ -31,7 +31,7 @@ public class HumanPlayer implements Player {
 	 * @param userID
 	 *            the playerID to set
 	 */
-	public void setUserID(String userID) {
+	public void setUserID(long userID) {
 		this.userID = userID;
 	}
 
@@ -113,8 +113,8 @@ public class HumanPlayer implements Player {
 	/**
 	 * @return the contacts
 	 */
-	public String getContacts() {
-		return contacts;
+	public String getPhone() {
+		return phone;
 	}
 
 	/**
@@ -122,31 +122,29 @@ public class HumanPlayer implements Player {
 	 *            the contacts to set
 	 */
 	public void setContacts(String contacts) {
-		this.contacts = contacts;
+		this.phone = contacts;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result
 				+ ((firstName == null) ? 0 : firstName.hashCode());
 		result = prime * result
 				+ ((lastName == null) ? 0 : lastName.hashCode());
-		result = prime * result + ((userID == null) ? 0 : userID.hashCode());
+		result = prime * result + ((phone == null) ? 0 : phone.hashCode());
+		result = prime * result + (int) (userID ^ (userID >>> 32));
 		result = prime * result
 				+ ((userName == null) ? 0 : userName.hashCode());
 		return result;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -158,6 +156,11 @@ public class HumanPlayer implements Player {
 		if (getClass() != obj.getClass())
 			return false;
 		HumanPlayer other = (HumanPlayer) obj;
+		if (email == null) {
+			if (other.email != null)
+				return false;
+		} else if (!email.equals(other.email))
+			return false;
 		if (firstName == null) {
 			if (other.firstName != null)
 				return false;
@@ -168,10 +171,12 @@ public class HumanPlayer implements Player {
 				return false;
 		} else if (!lastName.equals(other.lastName))
 			return false;
-		if (userID == null) {
-			if (other.userID != null)
+		if (phone == null) {
+			if (other.phone != null)
 				return false;
-		} else if (!userID.equals(other.userID))
+		} else if (!phone.equals(other.phone))
+			return false;
+		if (userID != other.userID)
 			return false;
 		if (userName == null) {
 			if (other.userName != null)
@@ -190,7 +195,7 @@ public class HumanPlayer implements Player {
 	public String toString() {
 		return "HumanPlayer [userID=" + userID + ", userName=" + userName
 				+ ", firstName=" + firstName + ", lastName=" + lastName
-				+ ", email=" + email + ", contacts=" + contacts + "]";
+				+ ", email=" + email + ", contacts=" + phone + "]";
 	}
 
 	@Override

@@ -1,13 +1,16 @@
 package dai.gomoku.server;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import javax.sql.DataSource;
 
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 
+import dai.gomoku.game.core.GomokuGame;
 import dai.gomoku.game.core.HumanPlayer;
 import dai.gomoku.game.core.Player;
 
@@ -20,13 +23,15 @@ import dai.gomoku.game.core.Player;
  * 
  */
 public class DBUtils {
+	private static DataSource dataSource = null;
 
 	/**
 	 * @return the connection
 	 * @throws SQLException
 	 */
-	public static Connection getConnection() throws SQLException {
-		return createDataSource().getConnection();
+	public synchronized static Connection getConnection() throws SQLException {
+		createDataSource();
+		return dataSource.getConnection();
 	}
 
 	/**
@@ -45,7 +50,7 @@ public class DBUtils {
 	public static boolean checkUser(String username, String password)
 			throws SQLException {
 		String userSQL = String
-				.format("SELECT * FROM signup WHERE username LIKE '%s' AND password LIKE password('%s')",
+				.format("SELECT * FROM users WHERE username LIKE '%s' AND password LIKE password('%s')",
 						username, password);
 		ResultSet rs = getResultSet(userSQL);
 		String user = null;
@@ -71,14 +76,17 @@ public class DBUtils {
 	 *             Thrown in case of any error
 	 */
 	public static Player createPlayer(String username) throws SQLException {
-		String userSQL = String.format(
-				"SELECT * FROM signup WHERE username LIKE '%s'", username);
+		String userSQL = String
+				.format("SELECT user_id, hu.username, firstname, lastname, "
+						+ "email, phone FROM users AS u, human_users AS hu WHERE "
+						+ "u.username=hu.username AND hu.username LIKE '%s'",
+						username);
 		ResultSet rs = getResultSet(userSQL);
 		Player player = null;
 		while (rs.next()) {
-			player = new HumanPlayer(rs.getString("userid"),
-					rs.getString("username"), rs.getString("fname"),
-					rs.getString("lname"));
+			player = new HumanPlayer(rs.getLong("user_id"),
+					rs.getString("username"), rs.getString("firstname"),
+					rs.getString("lastname"));
 		}
 		return player;
 	}
@@ -98,17 +106,138 @@ public class DBUtils {
 	public static boolean registerHumanPlayer(HumanPlayer player,
 			String password) throws SQLException {
 		if (!usernameExists(player.getUserName())) {
-			String registerString = String
-					.format("INSERT INTO signup(fname, lname, email, contacts, "
-							+ "password, username) VALUES('%s', '%s', '%s', '%s', password('%s'), '%s')",
-							player.getFirstName(), player.getLastName(),
-							player.getEmail(), player.getContacts(), password,
-							player.getUserName());
-			getConnection().createStatement().execute(registerString);
+			createUser(player, password);
+			registerPlayer(player);
 			return true;
 		} else {
 			return false;
 		}
+	}
+
+	/**
+	 * Saves a new, created game into the database and returns the generated
+	 * game_id
+	 * 
+	 * @param game
+	 *            The newly created game
+	 * 
+	 * @return the generated game_id
+	 * 
+	 * @throws SQLException
+	 */
+	public synchronized static long saveNewGame(GomokuGame game)
+			throws SQLException {
+		long insertID = -1;
+		String gameString = String.format(
+				"INSERT INTO games (playerO, playerX, status) "
+						+ "VALUES ('%s', '%s', 'ONGOING')", game.getPlayer1()
+						.getUserID(), game.getPlayer2().getUserID());
+		PreparedStatement stmt = getConnection().prepareStatement(gameString,
+				Statement.RETURN_GENERATED_KEYS);
+		stmt.executeUpdate();
+		ResultSet rs = stmt.getGeneratedKeys();
+		while (rs.next()) {
+			insertID = rs.getLong(1);
+		}
+		game.setGameID(insertID);
+		return insertID;
+	}
+
+	/**
+	 * Marks the specified game as 'COMPLETE' in the database
+	 * 
+	 * @param game
+	 *            The game to mark as 'COMPLETE'
+	 * 
+	 * @throws SQLException
+	 */
+	public static void markGameComplete(GomokuGame game) throws SQLException {
+		String sql = String.format(
+				"UPDATE games SET status='COMPLETE' where game_id=%d",
+				game.getGameID());
+		getConnection().prepareStatement(sql).executeUpdate();
+	}
+
+	/**
+	 * Sets a game as paused when the user explicitly pauses a game.
+	 * 
+	 * @param game
+	 *            The game to mark as 'PAUSED'
+	 * 
+	 * @throws SQLException
+	 */
+	public static void markGamePaused(GomokuGame game) throws SQLException {
+		String sql = String.format(
+				"UPDATE games SET status='PAUSED' where game_id=%d",
+				game.getGameID());
+		getConnection().prepareStatement(sql).executeUpdate();
+	}
+
+	/**
+	 * Sets the game as 'FORFEIT' if a user explicitly forfeits the game.
+	 * 
+	 * @param game
+	 *            The game to mark as 'FORFEIT'
+	 * 
+	 * @throws SQLException
+	 */
+	public static void markGameForfeit(GomokuGame game) throws SQLException {
+		String sql = String.format(
+				"UPDATE games SET status='FORFEIT' where game_id=%d",
+				game.getGameID());
+		getConnection().prepareStatement(sql).executeUpdate();
+	}
+
+	/**
+	 * This will generally be used for previously paused games when the users
+	 * resume the games. It sets the game as 'ONGOING' in the database.
+	 * 
+	 * @param game
+	 *            The game to mark as 'ONGOING'
+	 * 
+	 * @throws SQLException
+	 */
+	public static void markGameOngoing(GomokuGame game) throws SQLException {
+		String sql = String.format(
+				"UPDATE games SET status='ONGOING' where game_id=%d",
+				game.getGameID());
+		getConnection().prepareStatement(sql).executeUpdate();
+	}
+
+	public static long saveMove(long game_id, long player_id, int row, int col) throws SQLException {
+		String moveSql = String
+				.format("INSERT INTO game_moves(game_id, player_id, row, col) VALUES (%d, %d, %d, %d)",
+						game_id, player_id, row, col);
+		PreparedStatement stmt = getConnection().prepareStatement(moveSql, Statement.RETURN_GENERATED_KEYS);
+		stmt.executeUpdate();
+		
+		ResultSet rs = stmt.getGeneratedKeys();
+		long move_id = -1;
+		while ( rs.next() ) {
+			move_id = rs.getLong(1);
+		}
+		return move_id;
+	}
+
+	/*
+	 * private utility methods
+	 */
+
+	private static void registerPlayer(HumanPlayer player) throws SQLException {
+		String registerString = String.format(
+				"INSERT INTO human_users(username, firstname, lastname, email, phone) "
+						+ "VALUES('%s', '%s', '%s', '%s', '%s')",
+				player.getUserName(), player.getFirstName(),
+				player.getLastName(), player.getEmail(), player.getPhone());
+		getConnection().createStatement().execute(registerString);
+	}
+
+	private static void createUser(HumanPlayer player, String password)
+			throws SQLException {
+		String userString = String
+				.format("INSERT INTO users(username, password) VALUES('%s', password('%s'))",
+						player.getUserName(), password);
+		getConnection().createStatement().execute(userString);
 	}
 
 	/*
@@ -120,15 +249,20 @@ public class DBUtils {
 	 * 
 	 * @return A {@link DataSource} object
 	 */
-	private static DataSource createDataSource() {
+	private static void createDataSource() {
 		// TODO: Have these properties in a properties file, then read them from
 		// the properties file
-		DataSource datasource = new MysqlDataSource();
-		((MysqlDataSource) datasource).setDatabaseName("gomoku");
-		((MysqlDataSource) datasource).setUser("gomoku");
-		((MysqlDataSource) datasource).setPassword("gomoku");
-		((MysqlDataSource) datasource).setPort(3306);
-		return datasource;
+		if (dataSource == null) {
+			synchronized ("") {
+				if (dataSource == null) {
+					dataSource = new MysqlDataSource();
+					((MysqlDataSource) dataSource).setDatabaseName("gomoku");
+					((MysqlDataSource) dataSource).setUser("gomoku");
+					((MysqlDataSource) dataSource).setPassword("gomoku");
+					((MysqlDataSource) dataSource).setPort(3306);
+				}
+			}
+		}
 	}
 
 	private static ResultSet getResultSet(String userSQL) throws SQLException {
@@ -137,7 +271,7 @@ public class DBUtils {
 
 	private static boolean usernameExists(String username) throws SQLException {
 		String usernameSQL = String.format(
-				"SELECT * FROM signup WHERE username LIKE '%s'", username);
+				"SELECT * FROM users WHERE username LIKE '%s'", username);
 		ResultSet rs = getResultSet(usernameSQL);
 		String user = null;
 		while (rs.next()) {
