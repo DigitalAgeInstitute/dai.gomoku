@@ -1,0 +1,71 @@
+[Requests] (From clients)
+	[Challenge Request]
+		[Fields]
+			type="CHALLENGE"
+			challengerUsername
+			challengeeUsername
+			message={"MAKE", "ACCEPT", "REJECT"}
+
+	[Login Request]
+		[Fields]
+			type="LOGIN"
+			username
+			password
+
+	[Make Move Request]
+		[Fields]
+			type="MAKEMOVE"
+			gameID
+			username
+			row
+			col
+
+	[Register User Request]
+		[Fields]
+			type="REGISTERUSER"
+			firstName
+			lastName
+			email
+			contacts
+			password
+			username
+
+[Responses] (From server)
+	[Challenge Response]
+		[Fields]
+			type="CHALLENGE"
+			challengerUsername
+			challengeeUsername
+			message={"ACCEPT","REJECT"}
+			gameID
+	
+	[GameOver Response]
+		[Fields]
+			type="GAMEOVER"
+			gameID
+			winner
+	
+	[Login Response]
+		[Fields]
+			type="LOGIN"
+			state = {"OK", "FAIL"}
+	
+	[Make Move Response]
+		[Fields]
+			type="MAKEMOVE"
+			status={"OK","FAIL}
+			gameID
+			username
+			row
+			col
+	
+	[Register User Response]
+		[Fields]
+			type="REGISTERUSER"
+			status={"OK","FAIL"}
+			message
+	
+	[Send Player Response]
+		[Fields]
+			type="SENDPLAYER"
+			players ==> This is a list of available players
