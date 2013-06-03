@@ -41,17 +41,19 @@ public class GomokuDaemon implements Runnable {
 						clientSocket.getLocalPort());
 				Logger.getLogger(GomokuDaemon.class.getName()).log(Level.INFO,
 						acceptMessage);
-				JSONRequestHandler clientHandler = new JSONRequestHandler(clientSocket);
+				JSONRequestHandler clientHandler = new JSONRequestHandler(
+						clientSocket);
 				serviceThreads.execute(clientHandler);
 			} catch (IOException e) {
-				Logger.getLogger(GomokuDaemon.class.getName()).log(Level.SEVERE, e.getLocalizedMessage());
+				Logger.getLogger(GomokuDaemon.class.getName()).log(
+						Level.SEVERE, e.getLocalizedMessage());
 			}
 		}
 
 		serviceThreads.shutdown();
 		releaseResources();
 	}
-	
+
 	private void initSSocket(int port) throws IOException {
 		this.ssocket = new ServerSocket(port);
 	}
@@ -71,14 +73,29 @@ public class GomokuDaemon implements Runnable {
 	}
 
 	public static void main(String[] args) {
-		ExecutorService daemonThread = Executors.newCachedThreadPool();
-		try {
-			GomokuDaemon daemon = new GomokuDaemon(4010);
-			daemonThread.execute(daemon);
-		} catch (IOException e) {
-			Logger.getLogger(GomokuDaemon.class.getName()).log(Level.SEVERE, e.getLocalizedMessage());
+		if (args.length != 1) {
+			System.out.println("----------------------------------");
+			System.out.println("              USAGE               ");
+			System.out.println("java GomokuDaemon <port>");
+			System.out.println("----------------------------------");
+			System.out.println("Quiting daemon...");
+		} else {
+			ExecutorService daemonThread = Executors.newCachedThreadPool();
+			try {
+				int port = Integer.parseInt(args[0]);
+				GomokuDaemon daemon = new GomokuDaemon(port);
+				daemonThread.execute(daemon);
+			} catch (IOException e) {
+				Logger.getLogger(GomokuDaemon.class.getName()).log(
+						Level.SEVERE, e.getLocalizedMessage());
+				e.printStackTrace();
+			} catch (NumberFormatException nfe) {
+				System.err.println(String
+						.format("Invalid port number '%s'. I only "
+								+ "take integer values.\nQuiting daemon....", args[0]));
+			}
+			daemonThread.shutdown();
 		}
-		daemonThread.shutdown();
 	}
 
 }

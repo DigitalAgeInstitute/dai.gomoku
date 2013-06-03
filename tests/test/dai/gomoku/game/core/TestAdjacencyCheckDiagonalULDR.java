@@ -23,7 +23,7 @@ public class TestAdjacencyCheckDiagonalULDR {
 	public void setUp() throws Exception {
 		board = new Board(SIZE);
 		uldr = new AdjacencyCheckDiagonalULDR(board);
-		player = new HumanPlayer("1", "one", "The", "One");
+		player = new HumanPlayer(1, "one", "The", "One");
 	}
 
 	@Test

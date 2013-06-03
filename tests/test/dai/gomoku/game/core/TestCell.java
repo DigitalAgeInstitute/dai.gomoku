@@ -29,16 +29,16 @@ public class TestCell {
 
 	@Test
 	public void testGetCellOwner() {
-		Player player = new HumanPlayer("1", "one", "The", "One");
+		Player player = new HumanPlayer(1, "one", "The", "One");
 		markCell(cell2, player);
-		assertEquals(cell2.getCellOwner(), new HumanPlayer("1", "one", "The",
+		assertEquals(cell2.getCellOwner(), new HumanPlayer(1, "one", "The",
 				"One"));
 	}
 
 	@Test
 	public void testSetCellOwner() {
-		Player player = new HumanPlayer("2", "two", "The", "Other");
-		Player player2 = new HumanPlayer("3", "three", "The", "Third");
+		Player player = new HumanPlayer(2, "two", "The", "Other");
+		Player player2 = new HumanPlayer(3, "three", "The", "Third");
 		boolean failed = false;
 		try {
 			cell1.setCellOwner(player);
@@ -77,10 +77,10 @@ public class TestCell {
 		Cell similarToCell1 = new Cell(new BoardPosition(0, 0));
 		assertTrue(cell1.equals(similarToCell1));
 		
-		markCell(cell1, (Player) new HumanPlayer("2", "two", "The", "Other"));
+		markCell(cell1, (Player) new HumanPlayer(2, "two", "The", "Other"));
 		assertFalse(cell1.equals(similarToCell1));
 		
-		markCell(similarToCell1, (Player) new HumanPlayer("2", "two", "The", "Other"));
+		markCell(similarToCell1, (Player) new HumanPlayer(2, "two", "The", "Other"));
 		assertTrue(cell1.equals(similarToCell1));
 	}
 

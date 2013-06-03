@@ -14,15 +14,15 @@ public class TestHumanPlayer {
 	
 	@Before
 	public void setup ( ) {
-		hPlayer1 = new HumanPlayer("1", "theone", "The", "One");
-		hPlayer2 = new HumanPlayer("2", "otherone", "The", "Other");
+		hPlayer1 = new HumanPlayer(1, "theone", "The", "One");
+		hPlayer2 = new HumanPlayer(2, "otherone", "The", "Other");
 	}
 
 	@Test
 	public void testHumanPlayer() {
 		HumanPlayer player = null;
 		assertNull(player);
-		player = new HumanPlayer("test1", "testPlayer", "Test", "Player");
+		player = new HumanPlayer(3, "testPlayer", "Test", "Player");
 		assertNotNull(player);
 	}
 
@@ -35,7 +35,7 @@ public class TestHumanPlayer {
 	@Test
 	public void testSetPlayerID() {
 		assertEquals("1", hPlayer1.getUserID());
-		hPlayer1.setUserID("13");
+		hPlayer1.setUserID(13);
 		assertEquals("13", hPlayer1.getUserID());
 	}
 
@@ -80,8 +80,8 @@ public class TestHumanPlayer {
 
 	@Test
 	public void testEqualsObject() {
-		Player test1 = new HumanPlayer("1", "theone", "The", "One");
-		Player test2 = new HumanPlayer("2", "otherone", "The", "Other");
+		Player test1 = new HumanPlayer(1, "theone", "The", "One");
+		Player test2 = new HumanPlayer(2, "otherone", "The", "Other");
 		assertTrue(test1.equals(hPlayer1));
 		assertTrue(test2.equals(hPlayer2));
 		assertFalse(test1.equals(hPlayer2));

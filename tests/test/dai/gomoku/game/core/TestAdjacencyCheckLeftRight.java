@@ -24,8 +24,8 @@ public class TestAdjacencyCheckLeftRight {
 	public void setup() {
 		board = new Board(SIZE);
 		leftRight = new AdjacencyCheckLeftRight(board);
-		player1 = new HumanPlayer("1", "one", "The", "One");
-		player2 = new HumanPlayer("2", "two", "The", "Other");
+		player1 = new HumanPlayer(1, "one", "The", "One");
+		player2 = new HumanPlayer(2, "two", "The", "Other");
 	}
 
 	@Test

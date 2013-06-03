@@ -23,7 +23,7 @@ public class TestAdjacencyCheckDiagonalDLUR {
 	public void setUp() throws Exception {
 		board = new Board(SIZE);
 		dlur = new AdjacencyCheckDiagonalDLUR(board);
-		player = new HumanPlayer("1", "theone", "The", "One");
+		player = new HumanPlayer(1, "theone", "The", "One");
 	}
 
 	@Test

@@ -23,8 +23,8 @@ public class TestAdjacencyCheckUpDown {
 	public void setUp() throws Exception {
 		board = new Board(SIZE);
 		upDown = new AdjacencyCheckUpDown(board);
-		player1 = new HumanPlayer("1", "one", "The", "One");
-		player2 = new HumanPlayer("2", "two", "The", "Other");
+		player1 = new HumanPlayer(1, "one", "The", "One");
+		player2 = new HumanPlayer(2, "two", "The", "Other");
 	}
 
 	@Test
