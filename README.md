@@ -30,7 +30,7 @@ i.e.
 
 That should compile the entire server and you can run it with:
 
-	java dai.gomoku.server.GomokuDaemon &lt;port&gt;
+	java dai.gomoku.server.GomokuDaemon <port>
 
 ###Get the Jar File
 
@@ -40,4 +40,4 @@ Use the gomoku_db.sql file to create the database.
 
 Now, run the server
 
-	java -jar gomoku-server.jar &lt;port&gt;
+	java -jar gomoku-server.jar <port>
