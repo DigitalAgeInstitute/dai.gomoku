@@ -36,8 +36,10 @@ That should compile the entire server and you can run it with:
 
 Simply download the zip file from [here](https://github.com/DigitalAgeInstitute/dai.gomoku/tree/master/dist) and unzip it.
 
-Use the gomoku_db.sql file to create the database.
+Use the gomoku_db.sql file to create the database. If you do not have access to the mysql server, ask your database admin to run the file to create the database.
 
-Now, run the server
+Now, run the server:
 
 	java -jar gomoku-server.jar <port>
+
+All you need is to point your clients to the host where the server is running and enjoy a game, or two of Gomoku.
