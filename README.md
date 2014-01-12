@@ -17,7 +17,13 @@ This will get the sources and initialise a repository on your system that you co
 If you do not have git, [download the sources here](https://github.com/DigitalAgeInstitute/dai.gomoku) and click on the 'Download ZIP' button.
 This downloads the sources for you that you can then compile and run.
 
-You will also need to get the gson library in-order to enable the system to compile - make sure the gson library is present in the classpath.
+####Dependencies
+
+The server needs:
+
+	- gson library, which you can download [here](https://code.google.com/p/google-gson/downloads/list)
+	- JUnit library, which you can download [here](https://github.com/junit-team/junit/wiki/Download-and-Install)
+	- JDBC MySQL library, which you can download [here](https://dev.mysql.com/downloads/connector/j/)
 
 ####Compiling and Running
 If you have Eclipse on your system, you can simply import the project into your Eclipse workspace and run the dai.gomoku.server.GomokuDaemon class.
