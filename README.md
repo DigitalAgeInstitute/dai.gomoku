@@ -21,9 +21,9 @@ This downloads the sources for you that you can then compile and run.
 
 The server needs:
 
-	- gson library, which you can download [here](https://code.google.com/p/google-gson/downloads/list)
-	- JUnit library, which you can download [here](https://github.com/junit-team/junit/wiki/Download-and-Install)
-	- JDBC MySQL library, which you can download [here](https://dev.mysql.com/downloads/connector/j/)
+- gson library, which you can download [here](https://code.google.com/p/google-gson/downloads/list)
+- JUnit library, which you can download [here](https://github.com/junit-team/junit/wiki/Download-and-Install)
+- JDBC MySQL library, which you can download [here](https://dev.mysql.com/downloads/connector/j/)
 
 ####Compiling and Running
 If you have Eclipse on your system, you can simply import the project into your Eclipse workspace and run the dai.gomoku.server.GomokuDaemon class.
